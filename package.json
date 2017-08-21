@@ -1,0 +1,25 @@
+{
+  "name": "enterprise-react-app",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "moment": "^2.18.1",
+    "react-scripts": "1.0.10"
+  },
+  "dependencies": {
+    "apollo-client": "^1.9.0-1",
+    "graphql-tag": "^2.4.2",
+    "moment": "^2.18.1",
+    "react": "^15.6.1",
+    "react-apollo": "^1.4.8",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.1.2",
+    "semantic-ui-react": "^0.71.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
