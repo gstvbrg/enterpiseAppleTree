@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Divider, Segment, Tab } from 'semantic-ui-react'
+import { Divider, Tab } from 'semantic-ui-react'
 import CurrentInventoryTable from './CurrentInventoryTable'
 import PastInventoryTable from './PastInventoryTable'
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Header, Divider, Dimmer, Loader, Tab } from 'semantic-ui-react'
+import { Segment, Divider, Tab } from 'semantic-ui-react'
 import { graphql, gql } from 'react-apollo'
 import FlowerTable from './FlowerTable'
 import OilTable from './OilTable'

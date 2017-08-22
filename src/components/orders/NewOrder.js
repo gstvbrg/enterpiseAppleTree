@@ -1,7 +1,7 @@
 import React from 'react'
-import { Segment, Input, Button, Header, Item, Icon, Divider, Form } from 'semantic-ui-react'
-import Cart from './Cart'
-import OrderMenu from './OrderMenu'
+import { Map, List } from 'immutable'
+import { Segment, Input, Header, Divider, Form } from 'semantic-ui-react'
+import NewOrderMenu from './NewOrderMenu'
 import Moment from 'moment'
 import { graphql, gql } from 'react-apollo'
 import { CurrentInventoryQuery } from '../inventory/CurrentInventoryTable'
@@ -9,10 +9,10 @@ import { CurrentInventoryQuery } from '../inventory/CurrentInventoryTable'
 class NewOrder extends React.Component {
     constructor() {
         super()
-        this.state = {            
+        this.state = {          
             name: '',
             cell: '',
-            cartItems: []
+            cartItems: new List()
         }
     }
 
@@ -21,7 +21,6 @@ class NewOrder extends React.Component {
             [evt.target.name]: evt.target.value
         })
     )
-
 
     componentDidMount() {
         const now = Moment().format("dddd, MMMM Do YYYY");
@@ -50,7 +49,7 @@ class NewOrder extends React.Component {
                         </Form.Field>
                     </Form>
                     <Divider hidden />
-                    <OrderMenu {...this.props} />
+                    <NewOrderMenu {...this.props} />
                 </Segment>
             </Segment.Group>
         )

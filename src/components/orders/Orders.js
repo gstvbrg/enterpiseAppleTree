@@ -1,6 +1,6 @@
 import React from 'react'
-import { Route, Switch, Link } from 'react-router-dom'
-import { Container, Divider, Button } from 'semantic-ui-react'
+import { Route, Switch } from 'react-router-dom'
+import { Divider } from 'semantic-ui-react'
 import ActiveOrders from './ActiveOrders'
 import NewOrder from './NewOrder'
 

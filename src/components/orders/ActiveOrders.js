@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch, Link } from 'react-router-dom'
-import {Segment, Header, Button, Table, Icon, Label} from 'semantic-ui-react'
+import { Segment, Header, Table, Label } from 'semantic-ui-react'
 import NewOrder from './NewOrder'
 
 

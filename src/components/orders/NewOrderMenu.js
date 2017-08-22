@@ -1,8 +1,9 @@
 import React from 'react';
-import { Tab, Table, Divider, Header, Select, Button, Segment, Loader, Dimmer } from 'semantic-ui-react';
+import { Tab, Divider, Header, Segment, Loader, Dimmer } from 'semantic-ui-react';
+import { Map } from 'immutable'
 import FlowerTable from './FlowerTable'
 import OilTable from './OilTable'
-
+import Cart from './Cart'
 
 const Loading = () => (
     <div>
@@ -15,33 +16,26 @@ const Loading = () => (
     </div>
 )
 
-
-const MenuFooter = (props) => {
-    return (
-        <Table.Footer fullWidth>
-            <Table.Row>
-                <Table.HeaderCell colSpan='3' />
-                <Table.HeaderCell colSpan='2'>Total</Table.HeaderCell>
-            </Table.Row>
-        </Table.Footer>
-    )
-}
-
-
-class OrderMenu extends React.Component {
+class NewOrderMenu extends React.Component {
     constructor(props){
         super(props)
-        this.state = {}
         this.sendItemToCart = this.sendItemToCart.bind(this)
     }
 
+    componentDidMount() {
+        this.setState({
+            flowers: new Map()
+        })
+    }
+
     sendItemToCart(name, value) {
-        this.setState({name, value})
+        this.setState( prevState => ({
+            flowers: prevState.flowers.setIn([ name, 'value'], value)
+        }))
     }
 
     render () {
         /* Loading */
-        let loading = false;
         if (this.props.currentInventory && this.props.currentInventory.loading) {
             return <Loading />
         }
@@ -56,7 +50,7 @@ class OrderMenu extends React.Component {
 
         
         const panes = [
-            {menuItem: 'Flowers', render: () => <FlowerTable flowers={currentFlowers} footer={<MenuFooter/>} sendItemToCart={this.sendItemToCart} />},
+            {menuItem: 'Flowers', render: () => <FlowerTable flowers={currentFlowers} sendItemToCart={this.sendItemToCart} />},
             {menuItem: 'Oil', render: () => <OilTable cartridges={currentOils} />}
         ]
 
@@ -64,10 +58,11 @@ class OrderMenu extends React.Component {
             <div>
                 <Header size='medium' textAlign='left'>Menu</Header>
                 <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+                { this.state.flowers.size > 0 && <Cart currentInventory={this.props.currentInventory} flowers={this.state.flowers} />}
             </div>
         )
     }
 }
 
 
-export default OrderMenu
+export default NewOrderMenu

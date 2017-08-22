@@ -1,5 +1,6 @@
 import React from 'react'
-import { Table, Label, Dropdown, Button, Icon } from 'semantic-ui-react'
+import { Table, Label, Dropdown } from 'semantic-ui-react'
+import { Map } from 'immutable'
 
 const StrainLabel = (props) => {
     let color = "", 
@@ -58,7 +59,7 @@ const QuanityPriceSelector = (props) => {
         {key: `${props.product.flower.name}-ounce`, text: 'ounce', value: 28.1},
     ]
     return (
-        <Dropdown placeholder='Amt  ' fluid multiple search selection allowAdditions closeOnChange name={props.product.flower.name} additionLabel={<i style={{ color: 'red' }}>Input Grams: </i>} 
+        <Dropdown placeholder='Amt  ' fluid multiple search selection closeOnChange name={props.product.flower.name} additionLabel={<i style={{ color: 'red' }}>Input Grams: </i>} 
         options={options} onChange={props.handleTotal} onAddItem={(e, {value}) => options.concat([{key: props.product.flower.name,text: value, value}])} />
     )
 }
@@ -72,25 +73,17 @@ export default class FlowerTable extends React.Component {
 
     componentWillMount() {
         this.setState({
-            name: '',
-            value: 0,
+            flowers: new Map()
         })
     }
 
     handleTotal = (evt, data) => {
-        let name = data.name.replace(/ /g,'')
+        let name = data.name //.replace(/ /g,'')
         let value = data.value.reduce((sum, value) => sum + value, 0)
-        console.log(data.options[0].id)
-        this.setState({name, value})
-    }
-
-    buttonTest = (evt, data) => {
-        evt.preventDefault()
-        console.log('click')
+        this.props.sendItemToCart(name, value)
     }
 
     render() {
-        const {name, value} = this.state
         return (
             <Table unstackable size='small'>
                 <Table.Header>
@@ -99,20 +92,17 @@ export default class FlowerTable extends React.Component {
                         <Table.HeaderCell>Type</Table.HeaderCell>
                         <Table.HeaderCell>Prod</Table.HeaderCell>
                         <Table.HeaderCell>Quantity</Table.HeaderCell>
-                        <Table.HeaderCell collapsing></Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body> 
-                {this.props.flowers.map( (product) => {
-                    return (
+                {this.props.flowers.map( (product) => (
                     <Table.Row key={product.flower.name}>
                         <Table.Cell>{product.flower.name}</Table.Cell>
                         <Table.Cell><StrainLabel type={product.flower.strain} /></Table.Cell>
                         <Table.Cell><ProductionLabel prod={product.flower.productionMethod} /></Table.Cell>
                         <Table.Cell><QuanityPriceSelector product={product} handleTotal={this.handleTotal} /></Table.Cell>
-                        <Table.Cell><Button icon circular size='mini' color='green' onClick={() => this.props.sendItemToCart(this.state.name, this.state.value)}><Icon name='add'/></Button></Table.Cell>
                     </Table.Row>)
-                })}
+                )}
                 </Table.Body>
                 { this.props.footer }
             </Table>
