@@ -22,7 +22,7 @@ class NewOrderMenu extends React.Component {
         this.sendItemToCart = this.sendItemToCart.bind(this)
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.setState({
             flowers: new Map()
         })
@@ -58,7 +58,12 @@ class NewOrderMenu extends React.Component {
             <div>
                 <Header size='medium' textAlign='left'>Menu</Header>
                 <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
-                { this.state.flowers.size > 0 && <Cart currentInventory={this.props.currentInventory} flowers={this.state.flowers} />}
+                { this.state.flowers.size > 0 && 
+                    <Cart 
+                        currentInventory={this.props.currentInventory} 
+                        flowers={this.state.flowers}
+                        addCartItemToOrder={this.props.addCartItemToOrder}
+                    />}
             </div>
         )
     }
