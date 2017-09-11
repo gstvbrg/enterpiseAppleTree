@@ -58,11 +58,13 @@ class NewOrderMenu extends React.Component {
             <div>
                 <Header size='medium' textAlign='left'>Menu</Header>
                 <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
-                { this.state.flowers.size > 0 && 
+                { true && 
                     <Cart 
                         currentInventory={this.props.currentInventory} 
                         flowers={this.state.flowers}
                         addCartItemToOrder={this.props.addCartItemToOrder}
+                        name={this.props.name}
+                        cell={this.props.cell}
                     />}
             </div>
         )

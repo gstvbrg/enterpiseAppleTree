@@ -145,18 +145,19 @@ export default class Cart extends React.Component {
                         <Table.Row>
                         { this.isCartEmpty() ?
                             (<Table.Cell colSpan='3' textAlign='center' selectable singleLine>
-                                <Link to={{pathname: "/orders/new/summary", state: {cartItems: this.state.cartItems} }}>
-                                    <Button basic color='red' fluid disabled>
-                                        <Header as='h3' color='red'>
-                                            <em>Submit</em>
-                                        </Header>    
-                                    </Button>
-                                </Link>
+                                <Button basic color='red' fluid disabled>
+                                    <Header as='h3' color='red'>
+                                        <em>Submit</em>
+                                    </Header>    
+                                </Button>
                              </Table.Cell>)
                         :   (<Table.Cell colSpan='3' textAlign='center' selectable singleLine>
                                 <Link to={{ pathname: '/orders/new/summary', state: {
                                     cartItems: this.state.cartItems.toJS(),
-                                    cartTotal: this.state.cartTotal
+                                    cartTotal: this.state.cartTotal,
+                                    name: this.props.name,
+                                    cell: this.props.cell,
+                                    
                                 } }}>
                                     <Button basic fluid onClick={this.sendItemsUp}>
                                         <Header as='h3' color='green'><em>Submit</em></Header>

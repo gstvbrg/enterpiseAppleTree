@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header } from 'semantic-ui-react';
+import { Header, Button } from 'semantic-ui-react';
 import { List } from 'immutable'
 
 export default class OrderSummary extends React.Component {
@@ -8,7 +8,14 @@ export default class OrderSummary extends React.Component {
     }
     render() {
         return (
-            <Header content={this.props.cartTotal} />
+            <div>
+                <ul>
+                    <li>{this.props.cartTotal}</li>
+                    <li>{this.props.name}</li>
+                    <li>{this.props.cell}</li>
+                </ul>
+                <Button content="Submit" onClick={() => console.log(this.props)} />
+            </div>
         )
     }
 }

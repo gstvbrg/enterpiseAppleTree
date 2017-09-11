@@ -62,7 +62,7 @@ class NewOrder extends React.Component {
                         </Form.Field>
                     </Form>
                     <Divider hidden />
-                    <NewOrderMenu {...this.props} addCartItemToOrder={this.addCartItemToOrder} />
+                    <NewOrderMenu name={this.state.name} cell={this.state.cell} addCartItemToOrder={this.addCartItemToOrder} {...this.props} />
                 </Segment>
             </Segment.Group>
         )
