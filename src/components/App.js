@@ -1,14 +1,14 @@
 import React from 'react'
 import AdminNav from './navbars/AdminNav'
 import AdminBody from './bodys/AdminBody'
+import Login from './login/Login'
 
 class App extends React.Component {
     render() {
+        const loggedIn = false
         return(
             <div>
-                {/* conditionally render navigation based on role */}
-                <AdminNav />
-                <AdminBody />
+                { loggedIn === true ? <AdminBody /> : <Login /> }
             </div>
         )
     }
