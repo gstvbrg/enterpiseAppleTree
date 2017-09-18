@@ -1,8 +1,10 @@
 import React from 'react';
-import { Table, Header, Button, Icon } from 'semantic-ui-react';
-import { List } from 'immutable'
-import { Route, Link } from 'react-router-dom'
-import OrderSummary from './OrderSummary'
+import { Table, Header, Button, Icon, Input } from 'semantic-ui-react';
+// import { List } from 'immutable'
+import { Link } from 'react-router-dom'
+// import OrderSummary from './OrderSummary'
+import { validateName, validateCell } from './NewOrder'
+import { Map } from 'immutable'
 
 export default class Cart extends React.Component {
     constructor(props){
@@ -14,8 +16,10 @@ export default class Cart extends React.Component {
                     units: obj.get('value'),
                     itemTotal: this.getItemPrice(key, obj.get('value')),
                 })),
-            cartTotal: this.props.flowers.entrySeq().reduce( (sum, flower) => sum + this.getItemPrice(flower[0], flower[1].get('value')), 0.0)
+            cartTotal: this.props.flowers.entrySeq().reduce( (sum, flower) => sum + this.getItemPrice(flower[0], flower[1].get('value')), 0.0),
+            adjustments: new Map(),
         }
+        this.handelAdjustment = this.handelAdjustment.bind(this)
     }
     
     componentWillReceiveProps(nextProps) {
@@ -92,12 +96,26 @@ export default class Cart extends React.Component {
         this.props.addCartItemToOrder(items)
     }
 
+    async handelAdjustment(index, sign) {
+        const prevVal = parseFloat(this.state.adjustments.get(`${index}-adjust`))
+        const prop = `${index}-adjust`
+        const newVal = sign * prevVal
+        await this.setState({adjustments: this.state.adjustments.set(prop, newVal )})
+        const adjustmentsReduced = this.state.adjustments.reduce((sum, val) => parseFloat(val) + parseFloat(sum), 0)
+        this.setState({
+            adjustedCartTotal: adjustmentsReduced + this.state.cartTotal,
+            discount: adjustmentsReduced
+        })
+    }
+
     render() {
+        const validName = validateName(this.props.name)
+        const validCell = validateCell(this.props.cell)
         return (
-            <Table size='small' unstackable basic>
+            <Table size='small' unstackable basic columns={5}>
                 <Table.Header>
                     <Table.Row>
-                        <Table.Cell singleLine>
+                        <Table.Cell singleLine colSpan='5'>
                             <Header as='h5' icon='shop' content='Shopping Cart'/>
                         </Table.Cell>
                     </Table.Row>
@@ -105,58 +123,75 @@ export default class Cart extends React.Component {
                         <Table.HeaderCell textAlign='center'>Product</Table.HeaderCell>
                         <Table.HeaderCell textAlign='center'>Quantity</Table.HeaderCell>
                         <Table.HeaderCell>Price</Table.HeaderCell>
+                        <Table.HeaderCell textAlign='center' colSpan={2}>Discount</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
                     { this.isCartEmpty() ? (
                         <Table.Row>
-                            <Table.Cell colSpan='3' textAlign='center' negative ><Icon disabled name='attention' size='large'color='red'/><b> EMPTY CART </b></Table.Cell>    
+                            <Table.Cell colSpan='5' textAlign='center' negative ><Icon disabled name='attention' size='large'color='red'/><b> EMPTY CART </b></Table.Cell>    
                         </Table.Row>                   
                     ) : (
                         this.state.cartItems.map( (item, index) => {
                             if (item.units > 0) {
-                                return (<Table.Row key={index}>
-                                            <Table.Cell textAlign='center'>{item.name}</Table.Cell>
-                                            <Table.Cell textAlign='center'>{item.units} g</Table.Cell>
-                                            <Table.Cell>$ {item.itemTotal}</Table.Cell>
-                                        </Table.Row>)
-                            }
+                            return (<Table.Row key={index}>
+                                        <Table.Cell collapsing textAlign='center'>{item.name}</Table.Cell>
+                                        <Table.Cell collapsing textAlign='center'>{item.units} g</Table.Cell>
+                                        <Table.Cell collapsing >$ {item.itemTotal}</Table.Cell>
+                                        <Table.Cell selectable>
+                                            <Input  fluid
+                                                    onChange={(e, data) => this.setState({adjustments: this.state.adjustments.set(`${index}-adjust`, e.target.value)})}
+                                            />
+                                        </Table.Cell>
+                                        <Table.Cell >  
+                                            <Button.Group compact vertical size='small'>
+                                                <Button content='+' onClick={() => this.handelAdjustment(index, 1)} />
+                                                <Button content='–' onClick={() => this.handelAdjustment(index, -1)}/>
+                                            </Button.Group>
+                                        </Table.Cell>
+                                    </Table.Row>)
+                            } else return false 
                         })
                     )}
                     <Table.Row>
                         <Table.Cell></Table.Cell>
-                        <Table.Cell textAlign='right'><Header as='h5'><em>Total</em></Header></Table.Cell>
+                        <Table.Cell textAlign='center'><Header as='h5'><em>Total</em></Header></Table.Cell>
                         <Table.Cell><Header as='h5'><em>$ {this.state.cartTotal}</em></Header></Table.Cell>
+                        <Table.Cell></Table.Cell>
+                        <Table.Cell></Table.Cell>
                     </Table.Row>
-                    {/* <Table.Row>
-                        { this.isCartEmpty() ?
-                            (<Table.Cell colSpan='3' textAlign='center' error selectable singleLine>
-                                <Button basic fluid attached='bottom' disabled ><Header as='h3' color='red'><em>Submit</em></Header></Button>
-                             </Table.Cell>)
-                        :   (<Table.Cell colSpan='3' textAlign='center' selectable singleLine>
-                                <Button basic fluid attached='bottom' onKeyPress  ={console.log('click')}>
-                                    <Header as='h3' color='green'><em>Submit</em></Header>
-                                </Button>
-                             </Table.Cell>)
-                        }
-                    </Table.Row> */}
+                    { this.state.adjustedCartTotal &&
+                        <Table.Row>
+                            <Table.Cell textAlign='right' colSpan='2'><Header as='h5'><em>Adjustment</em></Header></Table.Cell>
+                            <Table.Cell><Header as='h5'><em>$ {this.state.discount}</em></Header></Table.Cell>
+                            <Table.Cell></Table.Cell>
+                            <Table.Cell></Table.Cell>
+                        </Table.Row>
+                    }{ this.state.adjustedCartTotal &&
+                        <Table.Row>
+                            <Table.Cell textAlign='right' colSpan='2'><Header as='h5'><em>Adjusted Total</em></Header></Table.Cell>
+                            <Table.Cell><Header as='h5'><em>$ {this.state.adjustedCartTotal}</em></Header></Table.Cell>
+                            <Table.Cell></Table.Cell>
+                            <Table.Cell></Table.Cell>
+                        </Table.Row>
+                    }
                 </Table.Body>
                     <Table.Footer>
                         <Table.Row>
-                        { this.isCartEmpty() ?
-                            (<Table.Cell colSpan='3' textAlign='center' selectable singleLine>
+                        { this.isCartEmpty() || !validName || !validCell ?
+                            (<Table.Cell colSpan='5' textAlign='center' selectable singleLine>
                                 <Button basic color='red' fluid disabled>
                                     <Header as='h3' color='red'>
                                         <em>Submit</em>
                                     </Header>    
                                 </Button>
                              </Table.Cell>)
-                        :   (<Table.Cell colSpan='3' textAlign='center' selectable singleLine>
+                        :   (<Table.Cell colSpan='5' textAlign='center' selectable singleLine>
                                 <Link to={{ pathname: '/orders/new/summary', state: {
                                     cartItems: this.state.cartItems.toJS(),
                                     cartTotal: this.state.cartTotal,
                                     name: this.props.name,
-                                    cell: this.props.cell,
+                                    cell: this.props.cell.replace(/\D/g,''),
                                     
                                 } }}>
                                     <Button basic fluid onClick={this.sendItemsUp}>

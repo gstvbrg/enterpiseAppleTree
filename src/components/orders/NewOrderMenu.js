@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab, Divider, Header, Segment, Loader, Dimmer } from 'semantic-ui-react';
+import { Tab, Divider, Header, Segment, Loader, Dimmer, Message } from 'semantic-ui-react';
 import { Map } from 'immutable'
 import FlowerTable from './FlowerTable'
 import OilTable from './OilTable'
@@ -41,7 +41,14 @@ class NewOrderMenu extends React.Component {
         }
         /* Error */
         if (this.props.currentInventory && this.props.currentInventory.error) {
-            return <div>Opps! Data Fetching Error</div>
+            return (
+                <Message negative
+                    header='Dang! the menu didnt load!'
+                    content='Sorry for the inconvenience'
+                    list={['double check your network connection',
+                            'try again in few mins']}
+                />
+            )
         }
 
         /* Current Inventory Table Setup */

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Label, Dropdown } from 'semantic-ui-react'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 
 const StrainLabel = (props) => {
     let color = "", 
@@ -51,17 +51,62 @@ const ProductionLabel = (props) => {
     )
 }
 
-const QuanityPriceSelector = (props) => {
-    const options = [ 
-        {key: `${props.product.flower.name}-eighth`, text: '1/8th', value: 3.5, id: `${props.product.id}`},
-        {key: `${props.product.flower.name}-quarter`, text: '1/4th', value: 7},
-        {key: `${props.product.flower.name}-half`, text: 'half', value: 14},
-        {key: `${props.product.flower.name}-ounce`, text: 'ounce', value: 28.1},
-    ]
-    return (
-        <Dropdown placeholder='Amt  ' fluid multiple search selection closeOnChange name={props.product.flower.name} additionLabel={<i style={{ color: 'red' }}>Input Grams: </i>} 
-        options={options} onChange={props.handleTotal} onAddItem={(e, {value}) => options.concat([{key: props.product.flower.name,text: value, value}])} />
-    )
+class QuanityPriceSelector extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            currentValue: [],
+            options: [ 
+                {key: `${this.props.product.flower.name}-eighth`, text: 'eighth', value: 3.5, id: `${props.product.id}`},
+                {key: `${this.props.product.flower.name}-quarter`, text: 'quarter', value: 7},
+                {key: `${this.props.product.flower.name}-half`, text: 'half', value: 14},
+                {key: `${this.props.product.flower.name}-ounce`, text: 'ounce', value: 28.1},
+            ]
+        }
+    }
+
+    addItemToOptions = (e, data) => {
+        const newItem = { key: `${data.name}-${data.value}g`, 
+                    text: data.value, 
+                    value: parseFloat(data.value)}
+        const filteredOptions = data.options.filter((item) => item.text === newItem.text)
+        if (filteredOptions.length === 0) {
+            this.setState({
+                options: data.options.concat(newItem)
+            })
+        }
+    }
+
+    handleValueChange = (e, data) => {
+        const filteredValue = data.value.filter( item => typeof(item) === 'number')
+        this.setState({currentValue: filteredValue })    
+        this.props.handleTotal(e, {filteredValue, ...data})
+    }
+
+    renderLabel = label => ({
+        content: `${label.text}`
+    })
+
+    render() {
+        return (
+            <Dropdown 
+            options={this.state.options} 
+            placeholder='Amt'
+            search 
+            selection
+            fluid 
+            multiple
+            allowAdditions
+            closeOnBlur
+            value={this.state.currentValue}
+            name={this.props.product.flower.name} 
+            additionLabel={<i style={{ color: 'red' }}>grams: </i>}
+            onAddItem={this.addItemToOptions}
+            onChange={this.handleValueChange}
+            onClick={this.handleEnter}
+            />
+        )
+    }
 }
 
 
@@ -78,28 +123,24 @@ export default class FlowerTable extends React.Component {
     }
 
     handleTotal = (evt, data) => {
-        let name = data.name //.replace(/ /g,'')
-        let value = data.value.reduce((sum, value) => sum + value, 0)
+        let name = data.name
+        let value = data.filteredValue.reduce((sum, value) => sum + parseFloat(value), 0)
         this.props.sendItemToCart(name, value)
     }
 
     render() {
         return (
-            <Table unstackable size='small'>
+            <Table unstackable singleLine columns={2} size='small'>
                 <Table.Header>
-                    <Table.Row>
+                    <Table.Row textAlign='right'>
                         <Table.HeaderCell>Strain</Table.HeaderCell>
-                        <Table.HeaderCell>Type</Table.HeaderCell>
-                        <Table.HeaderCell>Prod</Table.HeaderCell>
                         <Table.HeaderCell>Quantity</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body> 
                 {this.props.flowers.map( (product) => (
                     <Table.Row key={product.flower.name}>
-                        <Table.Cell>{product.flower.name}</Table.Cell>
-                        <Table.Cell><StrainLabel type={product.flower.strain} /></Table.Cell>
-                        <Table.Cell><ProductionLabel prod={product.flower.productionMethod} /></Table.Cell>
+                        <Table.Cell textAlign='right'>{product.flower.name}</Table.Cell>
                         <Table.Cell><QuanityPriceSelector product={product} handleTotal={this.handleTotal} /></Table.Cell>
                     </Table.Row>)
                 )}

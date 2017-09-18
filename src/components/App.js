@@ -5,7 +5,7 @@ import Login from './login/Login'
 
 class App extends React.Component {
     render() {
-        const loggedIn = false
+        const loggedIn = true
         return(
             <div>
                 { loggedIn === true ? <AdminBody /> : <Login /> }
