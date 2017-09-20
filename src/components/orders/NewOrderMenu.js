@@ -28,9 +28,9 @@ class NewOrderMenu extends React.Component {
         })
     }
 
-    sendItemToCart(name, value) {
+    sendItemToCart(name, value, id) {
         this.setState( prevState => ({
-            flowers: prevState.flowers.setIn([ name, 'value'], value)
+            flowers: prevState.flowers.setIn([ name, 'value'], value).setIn([name, 'id'], id)
         }))
     }
 
@@ -72,6 +72,7 @@ class NewOrderMenu extends React.Component {
                         addCartItemToOrder={this.props.addCartItemToOrder}
                         name={this.props.name}
                         cell={this.props.cell}
+                        currentFlowers={currentFlowers}
                     />}
             </div>
         )

@@ -14,6 +14,7 @@ export default class Cart extends React.Component {
                 this.props.flowers.entrySeq().map(([key, obj]) => ({
                     name: key,
                     units: obj.get('value'),
+                    id: obj.get('id'),
                     itemTotal: this.getItemPrice(key, obj.get('value')),
                 })),
             cartTotal: this.props.flowers.entrySeq().reduce( (sum, flower) => sum + this.getItemPrice(flower[0], flower[1].get('value')), 0.0),
@@ -28,9 +29,10 @@ export default class Cart extends React.Component {
                 nextProps.flowers.entrySeq().map(([key, obj], index) => ({
                     name: key,
                     units: obj.get('value'),
+                    id: obj.get('id'),
                     itemTotal: this.getItemPrice(key, obj.get('value')),
                 })),
-            cartTotal: nextProps.flowers.entrySeq().reduce( (sum, flower) => sum + this.getItemPrice(flower[0], flower[1].get('value')), 0.0)
+            cartTotal: nextProps.flowers.entrySeq().reduce( (sum, flower) => sum + this.getItemPrice(flower[0], flower[1].get('value')), 0.0),
         })
     }
 
@@ -96,7 +98,7 @@ export default class Cart extends React.Component {
         this.props.addCartItemToOrder(items)
     }
 
-    async handelAdjustment(index, sign) {
+    async handelAdjustment(index, sign, item) {
         const prevVal = parseFloat(this.state.adjustments.get(`${index}-adjust`))
         const prop = `${index}-adjust`
         const newVal = sign * prevVal
@@ -145,8 +147,8 @@ export default class Cart extends React.Component {
                                         </Table.Cell>
                                         <Table.Cell >  
                                             <Button.Group compact vertical size='small'>
-                                                <Button content='+' onClick={() => this.handelAdjustment(index, 1)} />
-                                                <Button content='–' onClick={() => this.handelAdjustment(index, -1)}/>
+                                                <Button content='+' onClick={() => this.handelAdjustment(index, 1, item)} />
+                                                <Button content='–' onClick={() => this.handelAdjustment(index, -1, item)}/>
                                             </Button.Group>
                                         </Table.Cell>
                                     </Table.Row>)
@@ -163,7 +165,11 @@ export default class Cart extends React.Component {
                     { this.state.adjustedCartTotal &&
                         <Table.Row>
                             <Table.Cell textAlign='right' colSpan='2'><Header as='h5'><em>Adjustment</em></Header></Table.Cell>
-                            <Table.Cell><Header as='h5'><em>$ {this.state.discount}</em></Header></Table.Cell>
+                            <Table.Cell>
+                                <Header as='h5' color={this.state.discount < 0 ? 'red': 'green'}>
+                                    <em>( {this.state.discount} )</em>
+                                </Header>
+                            </Table.Cell>
                             <Table.Cell></Table.Cell>
                             <Table.Cell></Table.Cell>
                         </Table.Row>
@@ -187,12 +193,14 @@ export default class Cart extends React.Component {
                                 </Button>
                              </Table.Cell>)
                         :   (<Table.Cell colSpan='5' textAlign='center' selectable singleLine>
-                                <Link to={{ pathname: '/orders/new/summary', state: {
+                                <Link to={{ 
+                                pathname: '/orders/new/summary', 
+                                replace: true,
+                                state: {
                                     cartItems: this.state.cartItems.toJS(),
-                                    cartTotal: this.state.cartTotal,
+                                    cartTotal: this.state.adjustedCartTotal || this.state.cartTotal,
                                     name: this.props.name,
-                                    cell: this.props.cell.replace(/\D/g,''),
-                                    
+                                    cell: parseFloat(this.props.cell.replace(/\D/g,'')),
                                 } }}>
                                     <Button basic fluid onClick={this.sendItemsUp}>
                                         <Header as='h3' color='green'><em>Submit</em></Header>

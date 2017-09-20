@@ -66,9 +66,11 @@ class QuanityPriceSelector extends React.Component {
     }
 
     addItemToOptions = (e, data) => {
-        const newItem = { key: `${data.name}-${data.value}g`, 
+        const newItem = { 
+                    key: `${data.name}-${data.value}g`, 
                     text: data.value, 
-                    value: parseFloat(data.value)}
+                    value: parseFloat(data.value)
+                }
         const filteredOptions = data.options.filter((item) => item.text === newItem.text)
         if (filteredOptions.length === 0) {
             this.setState({
@@ -113,7 +115,7 @@ class QuanityPriceSelector extends React.Component {
 export default class FlowerTable extends React.Component {
     constructor(props){
         super(props)
-        this.handleTotal = this.handleTotal.bind(this)
+        //this.handleTotal = this.handleTotal.bind(this)
     }
 
     componentWillMount() {
@@ -124,8 +126,9 @@ export default class FlowerTable extends React.Component {
 
     handleTotal = (evt, data) => {
         let name = data.name
+        let id = (this.props.flowers.find((obj) => obj.flower.name === name)).id
         let value = data.filteredValue.reduce((sum, value) => sum + parseFloat(value), 0)
-        this.props.sendItemToCart(name, value)
+        this.props.sendItemToCart(name, value, id)
     }
 
     render() {
