@@ -13,9 +13,9 @@ export default class Order extends React.Component {
             <div>
                 <Divider hidden />
                 <Switch>
-                    <Route exact path="/orders/new/summary" render={({location}) => <OrderSummary {...location.state} />}/>  
+                    <Route exact path="/orders/new/summary" render={({location, history}) => <OrderSummary {...location.state} history={history} />}/>  
                     <Route exact path="/orders/new" component={NewOrder} />
-                    <Route path="/orders" component={ActiveOrders} />
+                    <Route exact path="/orders" render={ (props) => <ActiveOrders {...props}/>} />
                 </Switch>
             </div>
         )

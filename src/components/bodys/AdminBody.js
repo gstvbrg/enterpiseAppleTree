@@ -4,7 +4,7 @@ import { Container } from 'semantic-ui-react'
 import AdminNav from '../navbars/AdminNav'
 import Inventory from '../inventory/Inventory'
 import Orders from '../orders/Orders'
-import Login from '../login/Login'
+// import Login from '../login/Login'
 
 export default class Body extends React.Component {
     render(){

@@ -1,5 +1,5 @@
 import React from 'react'
-import AdminNav from './navbars/AdminNav'
+// import AdminNav from './navbars/AdminNav'
 import AdminBody from './bodys/AdminBody'
 import Login from './login/Login'
 

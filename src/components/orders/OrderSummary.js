@@ -1,11 +1,11 @@
 import React from 'react';
 import { Header, Button, Segment, Table } from 'semantic-ui-react';
-import { List } from 'immutable'
-import { Link, Redirect } from 'react-router-dom'
-import Moment from 'moment'
+// import { List } from 'immutable'
+import { Link } from 'react-router-dom'
+// import Moment from 'moment'
 import { graphql, compose, gql } from 'react-apollo'
 
-const CREATE_ORDER_MUTATION = gql`
+const CREATE_ORDER_NEW_USER_MUTATION = gql`
     mutation CreateOrderMutation(
         $isActive: Boolean,
         $total: Float,
@@ -24,30 +24,40 @@ const CREATE_ORDER_MUTATION = gql`
         }
     }
 `
-
-const FIND_USERID_QUERY = gql`
-    query FindUserIdQuery (
-        $name: String, 
-        $cell: Float
+const CREATE_ORDER_MUTATION = gql`
+    mutation CreateOrderMutation(
+        $isActive: Boolean,
+        $total: Float,
+        $userId: ID,
+        $productsIds: [ID!],
+        $quantities: [OrderquantitiesQuantity!]
     ) {
-        allUsers(filter: {
-            AND : [{
-                name: $name
-            },{
-                cell: $cell
-            }]
-        }){
+        createOrder(
+            isActive: $isActive,
+            total: $total,
+            userId: $userId,
+            productsIds: $productsIds,
+            quantities: $quantities,
+        ) {
             id
         }
     }
 `
-
-class OrderSummary extends React.Component {
-
-    constructor(props){
-        super(props)
+const FIND_USERID_QUERY = gql`
+    query FindUserIdQuery (
+        $cell: Float
+    ) {
+        allUsers(filter: 
+            {
+                cell: $cell
+            }
+        ){
+            id
+        }
     }
-
+`
+class OrderSummary extends React.Component {
+    
     render() {
         return (
             <div>
@@ -136,6 +146,7 @@ class OrderSummary extends React.Component {
         const { name, cell, cartItems, cartTotal} = this.props
         const quantities = cartItems.map( item => {
             let { id, units} = item
+            console.log(id)
             return {
                 units,
                 productId: id
@@ -145,11 +156,12 @@ class OrderSummary extends React.Component {
         try { 
             userId = await this.props.findUserIdQuery.refetch().then(res => res.data.allUsers[0].id)
         } catch(e) {
-            console.log('error', e)
+            console.log('error',e)
         }
         console.log('userID', userId)
+        console.log('type of userId', typeof(userId))
         const productsIds = cartItems.map( item => item.id)
-        const variables = (userId === undefined) ? {
+        const variables = ( userId === undefined) ? {
                             variables: {
                                 isActive: true,
                                 total: cartTotal,
@@ -170,18 +182,16 @@ class OrderSummary extends React.Component {
                                 }
                             }
         console.log('variables', variables)
-        await this.props.createOrderMutation(variables).then( 
-            response => response.data.createOrder.id 
-                        ? 
-                        console.log(response, 'success')
-                        :
-                        console.log(response, 'error')
-        )
+        if (userId === undefined) { 
+            await this.props.createOrderNewUserMutation(variables).then( res => this.props.history.replace('/orders', {open: true}) )
+        } else {
+            await this.props.createOrderMutation(variables).then( res => this.props.history.replace('/orders', {open: true}) )
+        }
     }
 
 }
-
 export default compose(
+    graphql(CREATE_ORDER_NEW_USER_MUTATION, {name: 'createOrderNewUserMutation'}),
     graphql(CREATE_ORDER_MUTATION, {name: 'createOrderMutation'}),
     graphql(FIND_USERID_QUERY, {name: 'findUserIdQuery'})
 )(OrderSummary)

@@ -71,7 +71,7 @@ const FlowerTableBody = (props) => {
 
 const FlowerTable = (props) => {
     return (
-        <Table unstackable compact>
+        <Table unstackable compact textAlign='center'>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell>Name</Table.HeaderCell>

@@ -1,10 +1,10 @@
 import React from 'react'
-import { Map, List } from 'immutable'
-import { Segment, Input, Header, Divider, Form, Button, Label, Icon } from 'semantic-ui-react'
+import { List } from 'immutable'
+import { Segment, Input, Header, Divider, Form } from 'semantic-ui-react'
 import NewOrderMenu from './NewOrderMenu'
-import Cart from './Cart'
+// import Cart from './Cart'
 import Moment from 'moment'
-import { graphql, gql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { CurrentInventoryQuery } from '../inventory/CurrentInventoryTable'
 
 export const validateName = (name) => {

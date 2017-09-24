@@ -1,55 +1,55 @@
 import React from 'react'
-import { Table, Label, Dropdown } from 'semantic-ui-react'
-import { Map, List } from 'immutable'
+import { Table, Dropdown } from 'semantic-ui-react'
+import { Map } from 'immutable'
 
-const StrainLabel = (props) => {
-    let color = "", 
-        content = "";
+// const StrainLabel = (props) => {
+//     let color = "", 
+//         content = "";
 
-    switch(props.type) {
-        case "Sativa":
-            color = "red"
-            content = "S"
-            break
-        case "Indica": 
-            color = "blue"
-            content = "I"
-            break
-        case "Hybrid":
-            color = "purple"
-            content = "H"
-            break
-        default: 
-            color = "purple"
-            content = "H"
-    }
-    return (
-        <Label size='mini' color={color} content={content}/>
-    )
-}
+//     switch(props.type) {
+//         case "Sativa":
+//             color = "red"
+//             content = "S"
+//             break
+//         case "Indica": 
+//             color = "blue"
+//             content = "I"
+//             break
+//         case "Hybrid":
+//             color = "purple"
+//             content = "H"
+//             break
+//         default: 
+//             color = "purple"
+//             content = "H"
+//     }
+//     return (
+//         <Label size='mini' color={color} content={content}/>
+//     )
+// }
 
-const ProductionLabel = (props) => {
-    let content = "";
-    switch(props.prod) {
-        case "INDOOR":
-            content = "IN"
-            break
-        case "OUTDOOR": 
-            content = "OUT"
-            break
-        case "GREENHOUSE":
-            content = "GH"
-            break
-        case "HYDRO":
-            content = "DRO"
-            break
-        default:
-            content = "OUTDOOR"
-    }
-    return (
-        <Label size='mini' color="grey" content={content}/>
-    )
-}
+// const ProductionLabel = (props) => {
+//     let content = "";
+//     switch(props.prod) {
+//         case "INDOOR":
+//             content = "IN"
+//             break
+//         case "OUTDOOR": 
+//             content = "OUT"
+//             break
+//         case "GREENHOUSE":
+//             content = "GH"
+//             break
+//         case "HYDRO":
+//             content = "DRO"
+//             break
+//         default:
+//             content = "OUTDOOR"
+//     }
+//     return (
+//         <Label size='mini' color="grey" content={content}/>
+//     )
+// }
 
 class QuanityPriceSelector extends React.Component {
     constructor(props) {
@@ -113,10 +113,6 @@ class QuanityPriceSelector extends React.Component {
 
 
 export default class FlowerTable extends React.Component {
-    constructor(props){
-        super(props)
-        //this.handleTotal = this.handleTotal.bind(this)
-    }
 
     componentWillMount() {
         this.setState({

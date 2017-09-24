@@ -3,7 +3,7 @@ import { Table, Header, Button, Icon, Input } from 'semantic-ui-react';
 // import { List } from 'immutable'
 import { Link } from 'react-router-dom'
 // import OrderSummary from './OrderSummary'
-import { validateName, validateCell } from './NewOrder'
+import { validateCell } from './NewOrder'
 import { Map } from 'immutable'
 
 export default class Cart extends React.Component {
@@ -62,7 +62,7 @@ export default class Cart extends React.Component {
                 price = value * productPrice.gramOunce
             } 
         }
-        return parseInt(price)
+        return parseInt(price, 10)
     }
 
     calcCartridgePrice = (productInfo, value) => {
@@ -71,7 +71,7 @@ export default class Cart extends React.Component {
         if (value >= 0) {
             price = value * productPrice.unitPrice
         }
-        return parseInt(price)
+        return parseInt(price, 10)
     }
 
     getItemPrice = (name, value) => {
@@ -86,7 +86,7 @@ export default class Cart extends React.Component {
         } else {
             return new Error('No associated price')
         }
-        return parseInt(price)
+        return parseInt(price, 10)
     }
 
     isCartEmpty = () => (
@@ -111,7 +111,7 @@ export default class Cart extends React.Component {
     }
 
     render() {
-        const validName = validateName(this.props.name)
+        // const validName = validateName(this.props.name)
         const validCell = validateCell(this.props.cell)
         return (
             <Table size='small' unstackable basic columns={5}>
@@ -184,7 +184,7 @@ export default class Cart extends React.Component {
                 </Table.Body>
                     <Table.Footer>
                         <Table.Row>
-                        { this.isCartEmpty() || !validName || !validCell ?
+                        { this.isCartEmpty() || !validCell ?
                             (<Table.Cell colSpan='5' textAlign='center' selectable singleLine>
                                 <Button basic color='red' fluid disabled>
                                     <Header as='h3' color='red'>
