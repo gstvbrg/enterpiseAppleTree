@@ -4,6 +4,7 @@ import { Container } from 'semantic-ui-react'
 import AdminNav from '../navbars/AdminNav'
 import Inventory from '../inventory/Inventory'
 import Orders from '../orders/Orders'
+import Financials from '../financials/Financials'
 // import Login from '../login/Login'
 
 export default class Body extends React.Component {
@@ -15,7 +16,7 @@ export default class Body extends React.Component {
                     <Switch>
                         <Route exact path="/" component={Inventory}/>
                         <Route path="/orders" component={Orders} />
-                        <Route path="/financials" component={() => <p>Sup</p> } />
+                        <Route path="/financials" component={Financials} />
                     </Switch>
                 </Container>
             </div>

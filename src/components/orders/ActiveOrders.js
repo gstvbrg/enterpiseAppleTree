@@ -1,10 +1,11 @@
 import React from 'react'
 import { Route, Switch, Link } from 'react-router-dom'
-import { Container, Segment, Header, Table, Label, Divider, List, Checkbox, Button } from 'semantic-ui-react'
+import { Container, Segment, Header, Table, Label, Divider, List, Button, Icon, Confirm } from 'semantic-ui-react'
 import NewOrder from './NewOrder'
-import { graphql, gql } from 'react-apollo'
+import { graphql, gql, compose } from 'react-apollo'
 import Moment from 'moment'
 
+ 
 const ACTIVE_ORDERS_QUERY = gql`
     query ActiveOrdersQuery {
         allOrders(
@@ -12,8 +13,8 @@ const ACTIVE_ORDERS_QUERY = gql`
                 isActive: true 
             }
             orderBy: createdAt_ASC
-            first: 10
         ){
+            id
             user {
                 id
                 cell
@@ -37,19 +38,78 @@ const ACTIVE_ORDERS_QUERY = gql`
     }`
 
 
-export class ActiveOrders extends React.Component {
-    
-    constructor(props){
-        super(props)
-        this.state = {
-            open: this.props.open || false,
-            numStars: 4,
+const DELETE_ORDER_MUTATION = gql`
+    mutation DeleteOrderById($id: ID!) {
+        deleteOrder(id: $id) {
+            id
         }
     }
-    
+`
+
+export class ActiveOrders extends React.Component {
+        
+    componentWillMount() {
+        this.setState({
+            deleteToggle: false,
+            confirmOpen: false,
+            confirmContent: 'No Order Set, likely error occured'
+        })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log('component did update called')
+        if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.loading === false) {
+            this.props.activeOrdersQuery.refetch()
+            console.log('refetched allOrders')
+        }
+    }
+
     parseCell = (number) => (
         number.toString().replace(/(^\w{3})(\w{3})(\w{4})/g, (num,a,b,c) => `(${a})–${b}–${c}`)
     )
+
+    handleDeleteToggle = () => this.setState( prevState => {
+        return {deleteToggle: !prevState.deleteToggle}
+    })
+
+    contentForOrderDelete = (order) => {
+        return `Delete order for ${order.user.name || 'n/a'}, ${this.parseCell(order.user.cell)} of $ ${order.total}?`
+    }
+
+    promptRemoveOrder = (order) => {
+        this.setState({
+            confirmOpen: true,
+            confirmContent: this.contentForOrderDelete(order),
+            orderToDeleteId: order.id
+        })
+    }
+
+    confirmOrderDelete = async () => {
+        await this.props.deleteOrderMutation({variables: {id: this.state.orderToDeleteId}}).then( res => {
+            console.log(res, ' deleted.')
+            this.setState({
+                confirmOpen: false,
+                confirmContent: 'No Order Set, likely error occured',
+                orderToDeleteId: null
+            })
+            this.props.activeOrdersQuery.refetch()
+        })
+    }
+
+    cancelOrderDelete = () => {
+        this.setState({
+            confirmOpen: false,
+            confirmContent: 'No Order Set, likely error occured',
+            orderToDeleteId: null
+        })
+    }
+
+    manualUpdateOrders = () => {
+        if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.loading === false) {
+            this.props.activeOrdersQuery.refetch()
+            console.log('refetched allOrders')
+        }
+    }
 
     render() {
         if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.loading) {
@@ -123,7 +183,17 @@ export class ActiveOrders extends React.Component {
                             </Table.Row>
                             <Table.Row>
                                 <Table.HeaderCell textAlign='center'>
-                                   <Button icon='refresh'/>
+                                   <Button.Group basic compact>
+                                        <Button icon='remove' size='mini' onClick={this.handleDeleteToggle}/>
+                                        <Button icon='refresh' size='mini' onClick={this.manualUpdateOrders}/>
+                                        {/* <Confirm  /> add confirm through state - open,  */}
+                                        <Confirm 
+                                            open={this.state.confirmOpen}
+                                            content={this.state.confirmContent}
+                                            onConfirm={this.confirmOrderDelete}
+                                            onCancel={this.cancelOrderDelete}
+                                        />
+                                   </Button.Group>
                                 </Table.HeaderCell>
                                 <Table.HeaderCell textAlign='center'>Name</Table.HeaderCell>
                                 <Table.HeaderCell>Cell</Table.HeaderCell>
@@ -137,14 +207,11 @@ export class ActiveOrders extends React.Component {
                                 this.props.activeOrdersQuery.allOrders.map( (order, index) => {
                                     return (
                                         <Table.Row key={index}>
-                                            <Table.Cell textAlign='right' collapsing>
-                                                <Checkbox 
-                                                    fitted 
-                                                    style={{display: 'inline-block'}}
-                                                    label={{ children: `${index + 1}.`}}
-                                                />
+                                            <Table.Cell textAlign='left' collapsing id={order.id}>
+                                                {this.state.deleteToggle === true && 
+                                                <Icon name='remove' bordered onClick={ () => this.promptRemoveOrder(order)} /> }{index + 1}.
                                             </Table.Cell>
-                                            <Table.Cell textAlign='center'><Header as='h4'>{order.user.name || 'N/A'}</Header></Table.Cell>
+                                            <Table.Cell textAlign='left'><Header as='h4'>{order.user.name || 'N/A'}</Header></Table.Cell>
                                             <Table.Cell><Header as='h4'>{this.parseCell(order.user.cell)}</Header></Table.Cell>
                                             <Table.Cell>
                                                 <List>
@@ -159,7 +226,7 @@ export class ActiveOrders extends React.Component {
                                                 </List>
                                             </Table.Cell>
                                             <Table.Cell><h4>$ {order.total}</h4></Table.Cell>
-                                            <Table.Cell>{Moment(order.createdAt).format('ddd d – M/YY')}</Table.Cell>
+                                            <Table.Cell>{Moment(order.createdAt).format('ddd D – M|YY')}</Table.Cell>
                                         </Table.Row>
                                     )}
                                 )
@@ -172,4 +239,7 @@ export class ActiveOrders extends React.Component {
     }
 }
 
-export default graphql(ACTIVE_ORDERS_QUERY, { name: 'activeOrdersQuery' })(ActiveOrders)
+export default compose(
+    graphql(ACTIVE_ORDERS_QUERY, { name: 'activeOrdersQuery' }),
+    graphql(DELETE_ORDER_MUTATION, {name: 'deleteOrderMutation'})
+)(ActiveOrders)
