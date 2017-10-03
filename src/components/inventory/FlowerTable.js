@@ -1,5 +1,22 @@
 import React from 'react'
 import { Table, Label } from 'semantic-ui-react'
+import { graphql, gql } from 'react-apollo'
+
+// const PRODUCT_ORDER_UNITS = gql`
+//     query ProductOrderUnits($id: ID) {
+//         allOrders(
+//             filter: {
+//                 products_some: {
+//                     id: $id
+//                 }
+//             }
+//         ) {
+//             quantities {
+//                 units
+//             }
+//         }
+//     }
+// `
 
 const StrainLabel = (props) => {
     let color = "", 
@@ -53,18 +70,21 @@ const ProductionLabel = (props) => {
 const FlowerTableBody = (props) => {
     return (
         <Table.Body> 
-            {props.products.map( (product) => (
-                <Table.Row key={product.flower.name}>
-                    <Table.Cell>{product.flower.name}</Table.Cell>
-                    <Table.Cell><StrainLabel type={product.flower.strain} /></Table.Cell>
-                    <Table.Cell><ProductionLabel prod={product.flower.productionMethod} /></Table.Cell>
-                    <Table.Cell>{Math.round((product.flower.price.gramEighth) * 3.5)}</Table.Cell>
-                    <Table.Cell>{Math.round((product.flower.price.gramQuarter) * 7)}</Table.Cell>
-                    <Table.Cell>{Math.round((product.flower.price.gramHalf) * 14)}</Table.Cell>
-                    <Table.Cell>{Math.round((product.flower.price.gramOunce) * 28.1)}</Table.Cell>
-                    <Table.Cell>{product.units}</Table.Cell>
-                </Table.Row>
-            ))}
+            {props.products.map( (product) => {
+                let unitsSold = product.orders.reduce( (sum, order) => parseInt(order.quantities[0].units) + sum, 0)
+                return(
+                    <Table.Row key={product.flower.name}>
+                        <Table.Cell>{product.flower.name}</Table.Cell>
+                        <Table.Cell><StrainLabel type={product.flower.strain} /></Table.Cell>
+                        <Table.Cell><ProductionLabel prod={product.flower.productionMethod} /></Table.Cell>
+                        <Table.Cell>{Math.round((product.flower.price.gramEighth) * 3.5)}</Table.Cell>
+                        <Table.Cell>{Math.round((product.flower.price.gramQuarter) * 7)}</Table.Cell>
+                        <Table.Cell>{Math.round((product.flower.price.gramHalf) * 14)}</Table.Cell>
+                        <Table.Cell>{Math.round((product.flower.price.gramOunce) * 28.1)}</Table.Cell>
+                        <Table.Cell>{product.units - unitsSold}</Table.Cell>
+                    </Table.Row>
+                )
+            })}
         </Table.Body>
     )
 }
@@ -88,5 +108,7 @@ const FlowerTable = (props) => {
         </Table>
     )
 }
+
+// export default graphql(PRODUCT_ORDER_UNITS, {name: 'productOrderUnits'})(FlowerTable)
 
 export default FlowerTable

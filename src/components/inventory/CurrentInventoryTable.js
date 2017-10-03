@@ -31,16 +31,21 @@ query CurrentInventory {
                 unitPrice
             }
         }
+        orders {
+            quantities {
+                units
+            }
+        }
     }
 }`
 
-
 class CurrentInventoryTable extends React.Component {
-
+    
+    
     render() {
         /* Loading */
-        let loading = false;
-        if (this.props.currentInventory && this.props.currentInventory.loading) {
+        const currentInventoryLoaded = this.props.currentInventory && this.props.currentInventory.loading
+        if (currentInventoryLoaded) {
             return (
                 <div>
                     <Segment loading raised size='mini'>
@@ -59,10 +64,9 @@ class CurrentInventoryTable extends React.Component {
         /* Current Inventory Table Setup */
         let currentFlowers = this.props.currentInventory.allProducts.filter(product => product.flower);
         let currentOils = this.props.currentInventory.allProducts.filter(product => product.cartridge);
-
         return (
             <div>
-                <Segment loading={loading} raised size='mini'>
+                <Segment raised size='mini'>
                     <Tab menu={{ secondary: true, pointing: true }} panes={[
                         {
                             menuItem: 'Flower',
