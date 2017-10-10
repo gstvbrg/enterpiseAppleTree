@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Label } from 'semantic-ui-react'
-import { graphql, gql } from 'react-apollo'
+// import { graphql, gql } from 'react-apollo'
 
 // const PRODUCT_ORDER_UNITS = gql`
 //     query ProductOrderUnits($id: ID) {
@@ -71,7 +71,7 @@ const FlowerTableBody = (props) => {
     return (
         <Table.Body> 
             {props.products.map( (product) => {
-                let unitsSold = product.orders.reduce( (sum, order) => parseInt(order.quantities[0].units) + sum, 0)
+                let unitsSold = product.orders.reduce( (sum, order) => parseInt(order.quantities[0].units, 10) + sum, 0)
                 return(
                     <Table.Row key={product.flower.name}>
                         <Table.Cell>{product.flower.name}</Table.Cell>

@@ -2,10 +2,11 @@ import React from 'react'
 import { List } from 'immutable'
 import { Segment, Input, Header, Divider, Form } from 'semantic-ui-react'
 import NewOrderMenu from './NewOrderMenu'
-// import Cart from './Cart'
 import Moment from 'moment'
 import { graphql } from 'react-apollo'
 import { CurrentInventoryQuery } from '../inventory/CurrentInventoryTable'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export const validateName = (name) => {
     if (/^\w{2,15}$/g.test(name)) {
@@ -29,6 +30,7 @@ class NewOrder extends React.Component {
         this.state = {          
             name: '',
             cell: '',
+            date: Moment(),
             cartItems: new List()
         }
     }
@@ -51,6 +53,10 @@ class NewOrder extends React.Component {
         }))
     }
     
+    dateSelectionHandler = (date) => {
+        this.setState({ date })
+    }
+
     componentDidMount() {
         const now = Moment().format("dddd, MMMM Do YYYY");
         this.setState({ now });
@@ -90,9 +96,19 @@ class NewOrder extends React.Component {
                             icon={validateCell(this.state.cell) ? {name: 'checkmark', color: 'green', size: 'large'} : {name: 'remove', color: 'red', size: 'large'}}
                             />
                         </Form.Field>
+                        <Header as='h5' textAlign='left' content='Date'/>
+                        <DatePicker
+                            selected={this.state.date}
+                            onChange={this.dateSelectionHandler}
+                            onSelect={this.dateSelectionHandler}
+                            showTimeSelect
+                            timeIntervals={15}
+                            popperPlacement="bottom-start"
+                            dateFormat="MM/DD/YY,   h:mm A"
+                        />
                     </Form>
                     <Divider hidden />
-                    <NewOrderMenu name={this.state.name} cell={this.state.cell} addCartItemToOrder={this.addCartItemToOrder} {...this.props} />
+                    <NewOrderMenu name={this.state.name} cell={this.state.cell} date={this.state.date} addCartItemToOrder={this.addCartItemToOrder} {...this.props} />
                 </Segment>
             </Segment.Group>
         )

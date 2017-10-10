@@ -1,13 +1,12 @@
 import React from 'react';
 import { Header, Button, Segment, Table } from 'semantic-ui-react';
-// import { List } from 'immutable'
 import { Link } from 'react-router-dom'
-// import Moment from 'moment'
 import { graphql, compose, gql } from 'react-apollo'
 
 const CREATE_ORDER_NEW_USER_MUTATION = gql`
     mutation CreateOrderMutation(
         $isActive: Boolean,
+        $date: String!,
         $total: Float,
         $user: OrderuserUser,
         $productsIds: [ID!],
@@ -15,6 +14,7 @@ const CREATE_ORDER_NEW_USER_MUTATION = gql`
     ) {
         createOrder(
             isActive: $isActive,
+            date: $date,
             total: $total,
             user: $user,
             productsIds: $productsIds,
@@ -27,6 +27,7 @@ const CREATE_ORDER_NEW_USER_MUTATION = gql`
 const CREATE_ORDER_MUTATION = gql`
     mutation CreateOrderMutation(
         $isActive: Boolean,
+        $date: String!,
         $total: Float,
         $userId: ID,
         $productsIds: [ID!],
@@ -34,6 +35,7 @@ const CREATE_ORDER_MUTATION = gql`
     ) {
         createOrder(
             isActive: $isActive,
+            date: $date,
             total: $total,
             userId: $userId,
             productsIds: $productsIds,
@@ -124,7 +126,7 @@ class OrderSummary extends React.Component {
                         </Table>
                     </Segment>
                     <Button.Group attached='bottom' widths={2}>
-                        <Link to='orders/new' replace className='ui button'>edit</Link>
+                            <Link to='orders/new' replace className='ui button'>edit</Link> {/* history.goBack() ?? */}
                         <Button content='submit' 
                                 onClick={() => this._placeOrder()} 
                                 loading={this.isCreateMutationLoading()} />
@@ -143,7 +145,7 @@ class OrderSummary extends React.Component {
     }
 
     _placeOrder = async () => {
-        const { name, cell, cartItems, cartTotal} = this.props
+        const { name, cell, cartItems, cartTotal, date} = this.props
         const quantities = cartItems.map( item => {
             let { id, units} = item
             console.log(id)
@@ -164,6 +166,7 @@ class OrderSummary extends React.Component {
         const variables = ( userId === undefined) ? {
                             variables: {
                                 isActive: true,
+                                date,
                                 total: cartTotal,
                                 user: {
                                     name,
@@ -175,6 +178,7 @@ class OrderSummary extends React.Component {
                             } : {
                                 variables: {
                                     isActive: true,
+                                    date,
                                     total: cartTotal,
                                     userId, 
                                     productsIds,

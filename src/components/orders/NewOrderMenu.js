@@ -72,6 +72,7 @@ class NewOrderMenu extends React.Component {
                         addCartItemToOrder={this.props.addCartItemToOrder}
                         name={this.props.name}
                         cell={this.props.cell}
+                        date={this.props.date}
                         currentFlowers={currentFlowers}
                     />}
             </div>
