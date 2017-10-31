@@ -5,7 +5,6 @@ import AdminNav from '../navbars/AdminNav'
 import Inventory from '../inventory/Inventory'
 import Orders from '../orders/Orders'
 import Financials from '../financials/Financials'
-// import Login from '../login/Login'
 
 export default class Body extends React.Component {
     render(){
