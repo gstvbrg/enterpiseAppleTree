@@ -2,48 +2,13 @@ import React from 'react'
 import { Route, Switch, Link } from 'react-router-dom'
 import { Container, Segment, Header, Table, Label, Divider, List, Button, Icon, Confirm } from 'semantic-ui-react'
 import NewOrder from './NewOrder'
-import { graphql, gql, compose } from 'react-apollo'
+import { gql } from 'react-apollo'
 import Moment from 'moment'
 
-const ACTIVE_ORDERS_QUERY = gql`
-    query ActiveOrdersQuery {
-        allOrders(
-            first: 5,
-            filter: {
-                isActive: true 
-            }
-            orderBy: createdAt_DESC
-        ){
-            id
-            user {
-                id
-                cell
-                name
-            }
-            total
-            createdAt
-            quantities {
-                units
-                product {
-                    type
-                    flower {
-                        name
-                    }
-                    cartridge {
-                        name
-                    }
-                }
-            }
-        }
-    }
-`
-const DELETE_ORDER_MUTATION = gql`
-    mutation DeleteOrderById($id: ID!) {
-        deleteOrder(id: $id) {
-            id
-        }
-    }
-`
+
+// ~~~ CODE SMELL ~~~~ 
+// + query should be passed through props 
+//
 const ACTIVE_ORDERS_QUERY_REFETCH = gql`
     query ActiveOrdersQuery($id: String!) {
         allOrders(
@@ -75,10 +40,10 @@ const ACTIVE_ORDERS_QUERY_REFETCH = gql`
                 }
             }
     }
-}
-`
-export class ActiveOrders extends React.Component {
-    
+}`
+
+export default class DesktopOrderHistory extends React.Component {
+
     componentWillMount() {
         this.setState({
             deleteToggle: false,
@@ -87,14 +52,6 @@ export class ActiveOrders extends React.Component {
             paginationOffset: 5,
         })
     }
-
-    // componentDidUpdate(prevProps, prevState) {
-    //     console.log('component did update called')
-    //     if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.loading === false) {
-    //         this.props.activeOrdersQuery.refetch()
-    //         console.log('refetched allOrders')
-    //     }
-    // }
 
     parseCell = (number) => (
         number.toString().replace(/(^\w{3})(\w{3})(\w{4})/g, (num,a,b,c) => `(${a})–${b}–${c}`)
@@ -161,6 +118,8 @@ export class ActiveOrders extends React.Component {
     }
 
     render() {
+        
+        // Loading 
         if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.loading) {
             return (
                 <Container>
@@ -186,6 +145,7 @@ export class ActiveOrders extends React.Component {
             )
         }
         
+        // Error 
         if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.error) {
             return (
                 <Container>
@@ -290,9 +250,3 @@ export class ActiveOrders extends React.Component {
        )
     }
 }
-
-
-export default compose(
-    graphql(ACTIVE_ORDERS_QUERY, { name: 'activeOrdersQuery' }),
-    graphql(DELETE_ORDER_MUTATION, {name: 'deleteOrderMutation'})
-)(ActiveOrders)

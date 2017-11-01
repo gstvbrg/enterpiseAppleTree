@@ -7,7 +7,7 @@ import { Container,
          Divider,
          Button } from 'semantic-ui-react'
 import { gql, graphql, compose } from 'react-apollo'
-import { Route, Redirect } from 'react-router'
+import { Redirect } from 'react-router'
 
 
 const SIGN_IN_USER = gql`
