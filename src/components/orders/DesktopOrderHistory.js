@@ -27,6 +27,7 @@ const ACTIVE_ORDERS_QUERY_REFETCH = gql`
             }
             total
             createdAt
+            date
             quantities {
                 units
                 product {

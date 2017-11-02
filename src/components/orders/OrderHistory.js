@@ -1,7 +1,9 @@
 import React from 'react'
 import { graphql, gql, compose } from 'react-apollo'
 import DesktopOrderHistory from './DesktopOrderHistory'
+import MobileOrderHistory from './MobileOrderHistory'
 import { Responsive } from 'semantic-ui-react'
+
 const ACTIVE_ORDERS_QUERY = gql`
     query ActiveOrdersQuery {
         allOrders(
@@ -18,6 +20,7 @@ const ACTIVE_ORDERS_QUERY = gql`
                 name
             }
             total
+            date
             createdAt
             quantities {
                 units
@@ -59,6 +62,7 @@ const ACTIVE_ORDERS_QUERY_REFETCH = gql`
             }
             total
             createdAt
+            date
             quantities {
                 units
                 product {
@@ -80,7 +84,7 @@ export class OrderHistory extends React.Component {
         return (
             <div>
                 <Responsive minWidth={650}><DesktopOrderHistory {...this.props} /></Responsive>
-                <Responsive maxWidth={649}><div>TEST</div></Responsive>
+                <Responsive maxWidth={649}><MobileOrderHistory {...this.props}  /></Responsive>
             </div>
         )
     }

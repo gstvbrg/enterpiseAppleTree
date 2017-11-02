@@ -201,7 +201,7 @@ export default class Cart extends React.Component {
                                     cartTotal: this.state.adjustedCartTotal || this.state.cartTotal,
                                     name: this.props.name,
                                     cell: parseFloat(this.props.cell.replace(/\D/g,'')),
-                                    date: this.props.date.format("YYYYMMDDhhmm"),
+                                    date: this.props.date.format("YYYYMMDDhhmma"),
                                 } }}>
                                     <Button basic fluid onClick={this.sendItemsUp}>
                                         <Header as='h3' color='green'><em>Submit</em></Header>
