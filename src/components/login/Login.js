@@ -33,7 +33,7 @@ class Login extends React.Component {
             email: '',
             password: '',
             validEmail: false,
-            validPassword: false,
+            validPassword: true,
         }
     }
 
@@ -57,8 +57,9 @@ class Login extends React.Component {
             sessionStorage.setItem('graphcoolToken', response.data.signinUser.token)
             this.props.setAuthState(true)
           } catch (e) {
-            console.error('An error occured: ', e)
-          }        
+            console.error(e)
+            this.setState({ validPassword: false })
+        }
     }
 
     render() {
@@ -90,7 +91,7 @@ class Login extends React.Component {
                         { this.state.validEmail === false && <Header.Subheader style={{color: 'red'}}>Invalid Email</Header.Subheader> }
                     <br />
                     <Input fluid label='Password' placeholder='Password' name='password' type='password' onChange={this._handlePasswordInput}/>
-                        { false && <Header.Subheader style={{color: 'red'}}>Invalid Password</Header.Subheader> }
+                        { this.state.validPassword === false && <Header.Subheader style={{color: 'red'}}>Invalid Password</Header.Subheader> }
                     <br />
                </Segment>
                 <Button basic attached='bottom'>
