@@ -3,9 +3,9 @@ import { Route, Switch, Link } from 'react-router-dom'
 import { Container, 
          Segment, 
          Header,
-         Label, 
          Divider,
          Button,
+         Icon,
          Accordion,
          Confirm } from 'semantic-ui-react'
 import NewOrder from './NewOrder'
@@ -72,9 +72,9 @@ export default class MobileOrderHistory extends React.Component {
         const panels = orders.map( (order, index) => {
             return ({
                 title: {
-                    // content: `${index+1}) ${this.parseDate(order.date)} ${this.parseCell(order.user.cell)} | ${order.user.name || 'NA'}`,
                     content: 
                     (<Header as='h5' style={{display: 'inline'}}>
+                        { this.props.deleteToggle === true && <Icon name='remove' link bordered size='mini' onClick={ () => this.promptRemoveOrder(order)} />}
                         {`${this.parseDate(order.date)} – ${order.user.name || this.parseCell(order.user.cell)}`}
                     </Header>),
                     key: `title-${index}`,
@@ -166,56 +166,6 @@ export default class MobileOrderHistory extends React.Component {
 
     render() {
         
-        // Loading 
-        if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.loading) {
-            return (
-                <Container>
-                    <Switch>
-                        <Route path="/orders/new" component={NewOrder} />
-                    </Switch>
-                    <Segment clearing raised size='tiny' textAlign='center'>
-                        <Header textAlign="left"> Recent Orders 
-                            <Link to="/orders/new">
-                                <Label attached='top right' 
-                                    icon={{name: 'add', fitted: true, corner: true, size: 'large'}} 
-                                    content='NEW' 
-                                    size='small' /> 
-                            </Link>
-                        </Header>
-                        <Segment basic loading raised attached='top'>
-                            <Divider hidden />
-                            <Divider hidden />
-                            <Divider hidden />
-                        </Segment>
-                    </Segment>
-                </Container>
-            )
-        }
-        
-        // Error 
-        if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.error) {
-            return (
-                <Container>
-                    <Switch>
-                        <Route path="/orders/new" component={NewOrder} />
-                    </Switch>
-                    <Segment clearing raised size='tiny' textAlign='center'>
-                        <Header textAlign="left"> Recent Orders 
-                            <Link to="/orders/new">
-                                <Label attached='top right' 
-                                    icon={{name: 'add', fitted: true, corner: true, size: 'large'}} 
-                                    content='NEW' 
-                                    size='small' /> 
-                            </Link>
-                        </Header>
-                        <Segment basic raised attached='top'>
-                            <Header as='h3'>Opps! Data Fetching Error</Header>
-                        </Segment>
-                    </Segment>
-                </Container>
-            )
-        }
-
         return (
             <Container>
                 <Switch>
@@ -241,7 +191,7 @@ export default class MobileOrderHistory extends React.Component {
                     </Button.Group>                            
                     <Segment raised size='tiny' textAlign='left'>
                         <Header textAlign="left" as='h2'> Recent Orders </Header>
-                        <Accordion styled panels={this.state.panels} />
+                        <Accordion styled panels={this.setPanels(this.props.activeOrdersQuery.allOrders)} />
                     </Segment>
                     <Button attached='bottom' fluid content='More' onClick={this.fetchMoreOrders}/>
                 </Segment.Group>

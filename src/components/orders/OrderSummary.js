@@ -1,10 +1,11 @@
 import React from 'react';
 import { Header, Button, Segment, Table } from 'semantic-ui-react';
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { graphql, compose, gql } from 'react-apollo'
+import { ACTIVE_ORDERS_QUERY } from './OrderHistory'
 
 const CREATE_ORDER_NEW_USER_MUTATION = gql`
-    mutation CreateOrderMutation(
+    mutation CreateOrderNewUserMutation(
         $isActive: Boolean,
         $date: String!,
         $total: Float,
@@ -16,7 +17,7 @@ const CREATE_ORDER_NEW_USER_MUTATION = gql`
             isActive: $isActive,
             date: $date,
             total: $total,
-            user: $user,
+            userId: $user,
             productsIds: $productsIds,
             quantities: $quantities,
         ) {
@@ -59,8 +60,18 @@ const FIND_USERID_QUERY = gql`
     }
 `
 class OrderSummary extends React.Component {
+
+    state = {
+        redirect: false
+    }
     
     render() {
+        if (this.state.redirect === true) {
+            this.props.activeOrdersQuery.refetch()
+            return (
+                <Redirect to='/orders'/>
+            )
+        } 
         return (
             <div>
                 <Segment.Group>
@@ -126,76 +137,91 @@ class OrderSummary extends React.Component {
                         </Table>
                     </Segment>
                     <Button.Group attached='bottom' widths={2}>
-                            <Link to='orders/new' replace className='ui button'>edit</Link> {/* history.goBack() ?? */}
+                            <Link to='orders/new' replace className='ui button'>edit</Link>
                         <Button content='submit' 
-                                onClick={() => this._placeOrder()} 
-                                loading={this.isCreateMutationLoading()} />
+                                onClick={() => this._placeOrder()} />
                     </Button.Group>
                 </Segment.Group>
             </div>
         )
     }
 
-    isCreateMutationLoading = () => {
-        if (this.props.createOrderMutation && this.props.createOrderMutation.loading){
-            return true
+    itemQuantitiesFrom = (cartItems) => (
+        cartItems.map( item => {
+            let { id, units } = item
+            return {
+                units,
+                productId: id,
+            }
+        })
+    )
+
+    fetchUserId = async () => (
+        this.props.findUserIdQuery.refetch().then(res => {
+            try { return res.data.allUsers[0].id } catch(e) { return null } 
+        })
+    )
+
+    productIdsFrom = (cartItems) => (
+        cartItems.map( item => item.id )
+    )
+
+    setOrderProperities = (orderUserId, orderQuantities, orderProductsIds) => {
+        const { name, cell, cartTotal, date} = this.props
+        return orderUserId === null ? 
+        ({
+            variables: {
+                isActive: true,
+                date,
+                total: cartTotal,
+                user: {
+                    name,
+                    cell,
+                },
+                productsIds: orderProductsIds,
+                quantities: orderQuantities,
+            }
+        }) : 
+        ({
+            variables: {
+                isActive: true,
+                date,
+                total: cartTotal,
+                userId: orderUserId,
+                productsIds: orderProductsIds,
+                quantities: orderQuantities,
+            }
+        })
+    }
+
+    createNewOrderWith = async (orderPropertities) => {
+        if (orderPropertities.variables.userId) {
+            this.props.createOrderMutation(orderPropertities).then( res => this.setState({ redirect: true }) )
         } else {
-            return false
+            this.props.createOrderNewUserMutation(orderPropertities).then( res => this.setState({ redirect: true }) )
         }
     }
 
     _placeOrder = async () => {
-        const { name, cell, cartItems, cartTotal, date} = this.props
-        const quantities = cartItems.map( item => {
-            let { id, units} = item
-            console.log(id)
-            return {
-                units,
-                productId: id
-            }
-        })
-        var userId
-        try { 
-            userId = await this.props.findUserIdQuery.refetch().then(res => res.data.allUsers[0].id)
+        
+        const { cartItems } = this.props
+
+        const orderQuantities = this.itemQuantitiesFrom(cartItems)
+        const orderUserId = await this.fetchUserId()
+        const orderProductsIds = this.productIdsFrom(cartItems)
+
+        const orderPropertiesForDB = this.setOrderProperities(orderUserId, orderQuantities, orderProductsIds)
+        
+        try {
+            await this.createNewOrderWith(orderPropertiesForDB);
         } catch(e) {
-            console.log('error',e)
-        }
-        console.log('userID', userId)
-        console.log('type of userId', typeof(userId))
-        const productsIds = cartItems.map( item => item.id)
-        const variables = ( userId === undefined) ? {
-                            variables: {
-                                isActive: true,
-                                date,
-                                total: cartTotal,
-                                user: {
-                                    name,
-                                    cell,
-                                },
-                                productsIds,
-                                quantities,
-                            }
-                            } : {
-                                variables: {
-                                    isActive: true,
-                                    date,
-                                    total: cartTotal,
-                                    userId, 
-                                    productsIds,
-                                    quantities,
-                                }
-                            }
-        console.log('variables', variables)
-        if (userId === undefined) { 
-            await this.props.createOrderNewUserMutation(variables).then( res => this.props.history.replace('/orders', {open: true}) )
-        } else {
-            await this.props.createOrderMutation(variables).then( res => this.props.history.replace('/orders', {open: true}) )
+            console.log(e)
         }
     }
-
 }
 export default compose(
     graphql(CREATE_ORDER_NEW_USER_MUTATION, {name: 'createOrderNewUserMutation'}),
     graphql(CREATE_ORDER_MUTATION, {name: 'createOrderMutation'}),
-    graphql(FIND_USERID_QUERY, {name: 'findUserIdQuery'})
+    graphql(FIND_USERID_QUERY, {name: 'findUserIdQuery'}),
+    graphql(ACTIVE_ORDERS_QUERY, {name: 'activeOrdersQuery'})
 )(OrderSummary)

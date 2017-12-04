@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Label } from 'semantic-ui-react'
+import { Table, Label, Message, Icon } from 'semantic-ui-react'
 
 const StrainLabel = (props) => {
     let color = "", 
@@ -45,18 +45,23 @@ const OilTableBody = (props) => {
 
 const OilTable = (props) => {
     return (
-        <Table unstackable >
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Type</Table.HeaderCell>
-                    <Table.HeaderCell>Size</Table.HeaderCell>
-                    <Table.HeaderCell>Price</Table.HeaderCell>
-                    <Table.HeaderCell>Units</Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-            <OilTableBody products={props.oils} />
-        </Table>
+        <div>
+            { !props.oil ? 
+                <Message floating negative size='large'>Out of Stock <Icon name='frown'size='large' /></Message>
+            :
+            <Table unstackable >
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell>Name</Table.HeaderCell>
+                        <Table.HeaderCell>Type</Table.HeaderCell>
+                        <Table.HeaderCell>Size</Table.HeaderCell>
+                        <Table.HeaderCell>Price</Table.HeaderCell>
+                        <Table.HeaderCell>Units</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <OilTableBody products={props.oils} /> 
+            </Table> }
+        </div>
     )
 }
 

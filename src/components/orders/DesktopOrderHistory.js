@@ -9,7 +9,7 @@ import Moment from 'moment'
 // ~~~ CODE SMELL ~~~~ 
 // + query should be passed through props 
 //
-const ACTIVE_ORDERS_QUERY_REFETCH = gql`
+export const ACTIVE_ORDERS_QUERY_REFETCH = gql`
     query ActiveOrdersQuery($id: String!) {
         allOrders(
             first: 5,
@@ -80,7 +80,8 @@ export default class DesktopOrderHistory extends React.Component {
             this.setState({
                 confirmOpen: false,
                 confirmContent: 'No Order Set, likely error occured',
-                orderToDeleteId: null
+                orderToDeleteId: null,
+                deleteToggle: !this.state.deleteToggle
             })
             this.props.activeOrdersQuery.refetch()
         })

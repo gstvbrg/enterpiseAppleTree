@@ -5,6 +5,7 @@ import { Container,
          Icon,
          Input,
          Divider,
+         Message,
          Button } from 'semantic-ui-react'
 import { gql, graphql, compose } from 'react-apollo'
 import { Redirect } from 'react-router'
@@ -32,8 +33,10 @@ class Login extends React.Component {
         this.state = {
             email: '',
             password: '',
-            validEmail: false,
+            validEmail: true,
             validPassword: true,
+            loginError: false,
+            loginErrorMessage: false,
         }
     }
 
@@ -41,13 +44,16 @@ class Login extends React.Component {
         e.preventDefault()
         this.setState({ 
             [e.target.name] :  e.target.value,
-            validEmail: (/(@gmail.com)$/g).test(e.target.value)
+            validEmail: (/^$|(@gmail.com)$/g).test(e.target.value)
         })
     }
 
     _handlePasswordInput = (e) => {
         e.preventDefault()
-        this.setState({ [e.target.name] :  e.target.value })
+        this.setState({ 
+            [e.target.name] :  e.target.value,
+            validPassword : (/^$|(\w)(\d)+/g).test(e.target.value)
+        })
     }
 
     _signInUser = async () => {
@@ -57,9 +63,16 @@ class Login extends React.Component {
             sessionStorage.setItem('graphcoolToken', response.data.signinUser.token)
             this.props.setAuthState(true)
           } catch (e) {
-            console.error(e)
-            this.setState({ validPassword: false })
+              this.setState({ 
+                  loginError: true,
+                  loginErrorMessage: true,
+                })
+              console.error(e)
         }
+    }
+
+    _handleLoginErrorMessageDismiss = (e) => {
+        this.setState({ loginErrorMessage: false })
     }
 
     render() {
@@ -88,15 +101,28 @@ class Login extends React.Component {
                         LOGIN  –  SIGN UP
                     </Header.Subheader>
                     <Input fluid label='Username' placeholder='Email' name='email' onChange={this._handleEmailInput}/>
-                        { this.state.validEmail === false && <Header.Subheader style={{color: 'red'}}>Invalid Email</Header.Subheader> }
+                        { this.state.validEmail === false && 
+                            <Header.Subheader style={{color: 'red'}}>
+                                Invalid Email
+                            </Header.Subheader> }
                     <br />
                     <Input fluid label='Password' placeholder='Password' name='password' type='password' onChange={this._handlePasswordInput}/>
-                        { this.state.validPassword === false && <Header.Subheader style={{color: 'red'}}>Invalid Password</Header.Subheader> }
+                        { this.state.validPassword === false && 
+                            <Header.Subheader style={{color: 'red', display: 'inline'}}>
+                                Invalid Password
+                            </Header.Subheader> }
                     <br />
                </Segment>
                 <Button basic attached='bottom'>
                     <Header as='h3' onClick={() => this._signInUser()} style={{color: colors.submit}}>SUBMIT</Header>
                 </Button>
+                { this.state.loginError === true && this.state.loginErrorMessage === true &&
+                    <Message
+                        error
+                        content='Login Failed, please try again.'
+                        attached
+                        onDismiss={this._handleLoginErrorMessageDismiss}
+                    />}
             </Segment.Group>
             Forgot <a style={{color: 'slateblue'}}>Email</a> or <a style={{color: 'slateblue'}}>Password</a> ?
         </Container>

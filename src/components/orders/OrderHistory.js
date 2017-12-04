@@ -2,9 +2,9 @@ import React from 'react'
 import { graphql, gql, compose } from 'react-apollo'
 import DesktopOrderHistory from './DesktopOrderHistory'
 import MobileOrderHistory from './MobileOrderHistory'
-import { Responsive } from 'semantic-ui-react'
+import { Responsive, Container, Loader, Divider } from 'semantic-ui-react'
 
-const ACTIVE_ORDERS_QUERY = gql`
+export const ACTIVE_ORDERS_QUERY = gql`
     query ActiveOrdersQuery {
         allOrders(
             first: 5,
@@ -44,48 +44,27 @@ const DELETE_ORDER_MUTATION = gql`
         }
     }
 `
-const ACTIVE_ORDERS_QUERY_REFETCH = gql`
-    query ActiveOrdersQuery($id: String!) {
-        allOrders(
-            first: 5,
-            after: $id,
-            filter: {
-                isActive: true 
-            }
-            orderBy: createdAt_DESC
-        ){
-            id
-            user {
-                id
-                cell
-                name
-            }
-            total
-            createdAt
-            date
-            quantities {
-                units
-                product {
-                    type
-                    flower {
-                        name
-                    }
-                    cartridge {
-                        name
-                    }
-                }
-            }
-    }
-}
-`
-export class OrderHistory extends React.Component {
 
+export class OrderHistory extends React.Component {
     render() {
+
+        if (this.props.activeOrdersQuery && this.props.activeOrdersQuery.loading) {
+            return (
+                <Container style={{width: '50%', height: '50%', margin: 'auto'}}>
+                        <Divider hidden />
+                        <Divider hidden />
+                        <Loader active inline='centered' size='large' /> Loading
+                        <Divider hidden />
+                        <Divider hidden />
+                </Container>
+            )
+        }
+
         return (
-            <div>
-                <Responsive minWidth={650}><DesktopOrderHistory {...this.props} /></Responsive>
-                <Responsive maxWidth={649}><MobileOrderHistory {...this.props}  /></Responsive>
-            </div>
+            <Container>
+                <Responsive minWidth={750}><DesktopOrderHistory {...this.props} /></Responsive>
+                <Responsive maxWidth={749}><MobileOrderHistory {...this.props} /></Responsive>
+            </Container>
         )
     }
 }
