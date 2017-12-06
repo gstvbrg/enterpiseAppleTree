@@ -1,0 +1,138 @@
+﻿type File @model {
+  contentType: String!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  name: String!
+  secret: String! @isUnique
+  size: Int!
+  updatedAt: DateTime!
+  url: String! @isUnique
+}
+
+type Inventory @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  updatedAt: DateTime!
+  enterprise: Enterprise @relation(name: "InventoryOnEnterprise")
+  products: [Product!]! @relation(name: "ProductOnInventory")
+  totalCost: Float! @defaultValue(value: 0.0)
+}
+
+type Price @model {
+  createdAt: DateTime!
+  gramEighth: Float
+  gramHalf: Float
+  gramOunce: Float
+  gramQuarter: Float
+  id: ID! @isUnique
+  unitPrice: Float
+  updatedAt: DateTime!
+  cartridge: Cartridge @relation(name: "PriceOnCartidge")
+  flower: Flower @relation(name: "FlowerOnPrice")
+}
+
+type Product @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  units: Int @defaultValue(value: 0)
+  updatedAt: DateTime!
+  cartridge: Cartridge @relation(name: "CartridgeOnProduct")
+  flower: Flower @relation(name: "FlowerOnProduct")
+  info: String
+  inventory: Inventory @relation(name: "ProductOnInventory")
+  orders: [Order!]! @relation(name: "ProductsOnOrder")
+  quantities: [Quantity!]! @relation(name: "QuantityOfProduct")
+  type: Product_Type!
+  unitPrice: Float
+}
+
+type User @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  updatedAt: DateTime!
+  cell: Float!
+  email: String @isUnique
+  locations: [Location!]! @relation(name: "LocationOnUser")
+  name: String
+  orders: [Order!]! @relation(name: "UserOnOrder")
+  password: String
+}
+
+type Cartridge @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  mg: Int!
+  name: String!
+  price: Price @relation(name: "PriceOnCartidge")
+  product: Product @relation(name: "CartridgeOnProduct")
+  strain: String!
+  updatedAt: DateTime!
+}
+
+type Enterprise @model {
+  availability: Json
+  cell: Float!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  inventory: Inventory @relation(name: "InventoryOnEnterprise")
+  location: Location @relation(name: "LocationOnEnterprise")
+  updatedAt: DateTime!
+}
+
+type Flower @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  info: String
+  name: String!
+  price: Price @relation(name: "FlowerOnPrice")
+  product: Product @relation(name: "FlowerOnProduct")
+  productionMethod: Production_Method!
+  strain: String!
+  updatedAt: DateTime!
+}
+
+type Location @model {
+  city: String!
+  createdAt: DateTime!
+  enterprise: Enterprise @relation(name: "LocationOnEnterprise")
+  id: ID! @isUnique
+  instructions: String
+  state: String!
+  street: String!
+  updatedAt: DateTime!
+  user: User @relation(name: "LocationOnUser")
+  zip: String!
+}
+
+type Order @model {
+  createdAt: DateTime!
+  date: String!
+  id: ID! @isUnique
+  isActive: Boolean @defaultValue(value: true)
+  products: [Product!]! @relation(name: "ProductsOnOrder")
+  quantities: [Quantity!]! @relation(name: "QuantityOnOrder")
+  total: Float! @defaultValue(value: 0.0)
+  updatedAt: DateTime!
+  user: User @relation(name: "UserOnOrder")
+}
+
+enum Product_Type {
+  FLOWER
+  OIL
+}
+
+enum Production_Method {
+  INDOOR
+  GREENHOUSE
+  OUTDOOR
+  HYRDOPONIC
+}
+
+type Quantity @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  order: Order @relation(name: "QuantityOnOrder")
+  product: Product @relation(name: "QuantityOfProduct")
+  units: Float!
+  updatedAt: DateTime!
+}
