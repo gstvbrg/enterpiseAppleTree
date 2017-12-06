@@ -14,7 +14,7 @@ This app implements basic requirements for a web-based, inventory management too
 
 These objects and actors are encapsulated in a custom GraphQL service, through which their individual attributes and interdependent relationships are defined within a type system. 
 
-This schema is then used as input for a GraphQL cloud "Backend-as-a-service", [Graphcool](https://www.graph.cool/), which uses the type system to auto-generate CRUD-like GraphQL operations for a hosted SQL database. The resulting "GraphQL server", comprised of the base queries and mutations that can be made against the custom type system, becomes the API upon which the application is built.
+This [schema](./src/AppleTrees.schema) is then used as input for a GraphQL cloud "Backend-as-a-service", [Graphcool](https://www.graph.cool/), which uses the type system to auto-generate CRUD-like GraphQL operations for a hosted SQL database. The resulting "GraphQL server", comprised of the base queries and mutations that can be made against the custom type system, becomes the API upon which the application is built.
 
 This method of API generation is ideal for rapid prototyping, as the API can be easily  iterated on by making changes to the underlying GraphQL service schema.
 
