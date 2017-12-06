@@ -46,8 +46,8 @@ In conjunction with "GraphQL client" libraries, which provide network configurat
 ## New Order <a id="new-order"></a>
 ![](https://i.imgur.com/3wHtU8H.gif)
 + Order Creation
-  + Nested, controlled-components with shared state in root components
-  + Date And time managed with [Moment.js](https://momentjs.com/) and [React-DatePicker](https://hacker0x01.github.io/react-datepicker/)
+  + Nested, controlled-components with shared state
+  + Date and time managed with [Moment.js](https://momentjs.com/) and [React-DatePicker](https://hacker0x01.github.io/react-datepicker/)
 
 ## Recent Orders <a id="recent-orders"></a>
 ![](https://i.imgur.com/TTMnarP.gif)
