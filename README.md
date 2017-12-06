@@ -37,18 +37,18 @@ In conjunction with "GraphQL client" libraries, which provide network configurat
 
 ## Login
 ![](https://i.imgur.com/jWEgBLI.gif)
-+ Authenticaion
++ [Login Component](./src/components/login/Login.js)
   + RegEx input validation
-  + Token maintained in localStorage
+  + Authentication token maintained in localStorage
   + Authorization header applied through Apollo Client middleware
-
 
 ## New Order <a id="new-order"></a>
 ![](https://i.imgur.com/3wHtU8H.gif)
-+ Order Creation
++ [New Order Components](./src/components/orders/) \([root -> NewOrder.js](./src/components/orders/Orders.js)\)
   + Nested, controlled-components with shared state
   + Date and time managed with [Moment.js](https://momentjs.com/) and [React-DatePicker](https://hacker0x01.github.io/react-datepicker/)
+  + Shopping Cart modeled with [Immutable.js List](https://facebook.github.io/immutable-js/docs/#/List)
 
 ## Recent Orders <a id="recent-orders"></a>
 ![](https://i.imgur.com/TTMnarP.gif)
-+ Recent Order List
++ [Order History Components](./src/components/orders/) \([root -> DesktopOrderHistory.js || MobileOrderHistory.js](./src/components/orders/Orders.js)\)
