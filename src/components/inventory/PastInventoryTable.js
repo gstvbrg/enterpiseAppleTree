@@ -62,7 +62,6 @@ class PastInventoryTable extends React.Component {
         return (
             <div>
                 <Segment raised size='mini'>
-                {/* <Header textAlign='left'>Past Inventory</Header> */}
                 <Tab menu={{ secondary: true, pointing: true }} panes={[
                     {
                         menuItem: 'Flower',

@@ -5,10 +5,6 @@ import NewOrder from './NewOrder'
 import { gql } from 'react-apollo'
 import Moment from 'moment'
 
-
-// ~~~ CODE SMELL ~~~~ 
-// + query should be passed through props 
-//
 export const ACTIVE_ORDERS_QUERY_REFETCH = gql`
     query ActiveOrdersQuery($id: String!) {
         allOrders(
@@ -76,7 +72,6 @@ export default class DesktopOrderHistory extends React.Component {
 
     confirmOrderDelete = async () => {
         await this.props.deleteOrderMutation({variables: {id: this.state.orderToDeleteId}}).then( res => {
-            console.log(res, ' deleted.')
             this.setState({
                 confirmOpen: false,
                 confirmContent: 'No Order Set, likely error occured',
@@ -198,7 +193,6 @@ export default class DesktopOrderHistory extends React.Component {
                                        <Button.Group basic compact>
                                             <Button icon='remove' size='mini' onClick={this.handleDeleteToggle}/>
                                             <Button icon='refresh' size='mini' onClick={this.manualUpdateOrders}/>
-                                            {/* <Confirm  /> add confirm through state - open,  */}
                                             <Confirm 
                                                 open={this.state.confirmOpen}
                                                 content={this.state.confirmContent}

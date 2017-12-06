@@ -12,9 +12,6 @@ import NewOrder from './NewOrder'
 import { gql } from 'react-apollo'
 import Moment from 'moment'
 
-// ~~~ CODE SMELL ~~~~ 
-// + query should be passed through props 
-//
 const ACTIVE_ORDERS_QUERY_REFETCH = gql`
     query ActiveOrdersQuery($id: String!) {
         allOrders(
@@ -181,7 +178,6 @@ export default class MobileOrderHistory extends React.Component {
                             icon={{name: 'add', fitted: true, corner: true, size: 'large'}}
                             size='mini'
                         />
-                        {/* <Confirm  /> add confirm through state - open,  */}
                         <Confirm 
                             open={this.state.confirmOpen}
                             content={this.state.confirmContent}

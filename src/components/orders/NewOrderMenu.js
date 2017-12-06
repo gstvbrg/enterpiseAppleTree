@@ -55,7 +55,6 @@ class NewOrderMenu extends React.Component {
         let currentFlowers = this.props.currentInventory.allProducts.filter(product => product.flower);
         let currentOils = this.props.currentInventory.allProducts.filter(product => product.cartridge);
 
-        
         const panes = [
             {menuItem: 'Flowers', render: () => <FlowerTable flowers={currentFlowers} sendItemToCart={this.sendItemToCart} />},
             {menuItem: 'Oil', render: () => <OilTable cartridges={currentOils} />}

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Container, Segment, Header, Loader, Table } from 'semantic-ui-react'
-// import { Switch, Route } from 'react-router-dom'
 import { graphql, gql } from 'react-apollo'
 import DateGraph from './DateGraph'
 

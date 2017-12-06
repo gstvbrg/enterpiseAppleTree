@@ -1,8 +1,6 @@
 import React from 'react';
 import { Table, Header, Button, Icon, Input } from 'semantic-ui-react';
-// import { List } from 'immutable'
 import { Link } from 'react-router-dom'
-// import OrderSummary from './OrderSummary'
 import { validateCell } from './NewOrder'
 import { Map } from 'immutable'
 
@@ -111,7 +109,6 @@ export default class Cart extends React.Component {
     }
 
     render() {
-        // const validName = validateName(this.props.name)
         const validCell = validateCell(this.props.cell)
         return (
             <Table size='small' unstackable basic columns={5}>

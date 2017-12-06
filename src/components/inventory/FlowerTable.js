@@ -1,22 +1,5 @@
 import React from 'react'
 import { Table, Label } from 'semantic-ui-react'
-// import { graphql, gql } from 'react-apollo'
-
-// const PRODUCT_ORDER_UNITS = gql`
-//     query ProductOrderUnits($id: ID) {
-//         allOrders(
-//             filter: {
-//                 products_some: {
-//                     id: $id
-//                 }
-//             }
-//         ) {
-//             quantities {
-//                 units
-//             }
-//         }
-//     }
-// `
 
 const StrainLabel = (props) => {
     let color = "", 
@@ -108,7 +91,5 @@ const FlowerTable = (props) => {
         </Table>
     )
 }
-
-// export default graphql(PRODUCT_ORDER_UNITS, {name: 'productOrderUnits'})(FlowerTable)
 
 export default FlowerTable
