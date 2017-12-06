@@ -9,7 +9,6 @@
   + [New Order](#new-order)
   + [Recent Orders](#recent-orders)
 
-
 ## Summary
 This app implements basic requirements for a web-based, inventory management tool. Allowing end users to track fundamental metrics and information related to products, customers, and transactions.
 
