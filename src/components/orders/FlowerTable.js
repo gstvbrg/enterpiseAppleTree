@@ -2,55 +2,6 @@ import React from 'react'
 import { Table, Dropdown } from 'semantic-ui-react'
 import { Map } from 'immutable'
 
-// const StrainLabel = (props) => {
-//     let color = "", 
-//         content = "";
-
-//     switch(props.type) {
-//         case "Sativa":
-//             color = "red"
-//             content = "S"
-//             break
-//         case "Indica": 
-//             color = "blue"
-//             content = "I"
-//             break
-//         case "Hybrid":
-//             color = "purple"
-//             content = "H"
-//             break
-//         default: 
-//             color = "purple"
-//             content = "H"
-//     }
-//     return (
-//         <Label size='mini' color={color} content={content}/>
-//     )
-// }
-
-// const ProductionLabel = (props) => {
-//     let content = "";
-//     switch(props.prod) {
-//         case "INDOOR":
-//             content = "IN"
-//             break
-//         case "OUTDOOR": 
-//             content = "OUT"
-//             break
-//         case "GREENHOUSE":
-//             content = "GH"
-//             break
-//         case "HYDRO":
-//             content = "DRO"
-//             break
-//         default:
-//             content = "OUTDOOR"
-//     }
-//     return (
-//         <Label size='mini' color="grey" content={content}/>
-//     )
-// }
-
 class QuanityPriceSelector extends React.Component {
     constructor(props) {
         super(props)
@@ -66,23 +17,22 @@ class QuanityPriceSelector extends React.Component {
     }
 
     addItemToOptions = (e, data) => {
-        const newItem = { 
+        this.setState({ 
+            options: [
+                { 
                     key: `${data.name}-${data.value}g`, 
-                    text: data.value, 
+                    text: `${data.value}gs`, 
                     value: parseFloat(data.value)
-                }
-        const filteredOptions = data.options.filter((item) => item.text === newItem.text)
-        if (filteredOptions.length === 0) {
-            this.setState({
-                options: data.options.concat(newItem)
-            })
-        }
+                }, 
+                ...this.state.options], 
+        })
     }
 
     handleValueChange = (e, data) => {
-        const filteredValue = data.value.filter( item => typeof(item) === 'number')
-        this.setState({currentValue: filteredValue })    
-        this.props.handleTotal(e, {filteredValue, ...data})
+        const currentValue = data.value.map( item => parseFloat(item) )
+        this.setState({ currentValue })
+        // Update Cart Total
+        this.props.handleTotal(e, data)
     }
 
     renderLabel = label => ({
@@ -100,12 +50,13 @@ class QuanityPriceSelector extends React.Component {
             multiple
             allowAdditions
             closeOnBlur
+            closeOnChange
             value={this.state.currentValue}
             name={this.props.product.flower.name} 
             additionLabel={<i style={{ color: 'red' }}>grams: </i>}
             onAddItem={this.addItemToOptions}
             onChange={this.handleValueChange}
-            onClick={this.handleEnter}
+            additionPosition={'top'}
             />
         )
     }
@@ -123,7 +74,7 @@ export default class FlowerTable extends React.Component {
     handleTotal = (evt, data) => {
         let name = data.name
         let id = (this.props.flowers.find((obj) => obj.flower.name === name)).id
-        let value = data.filteredValue.reduce((sum, value) => sum + parseFloat(value), 0)
+        let value = data.value.reduce((sum, value) => sum + parseFloat(value), 0)
         this.props.sendItemToCart(name, value, id)
     }
 
