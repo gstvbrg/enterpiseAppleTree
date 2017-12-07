@@ -36,19 +36,19 @@ In conjunction with "GraphQL client" libraries, which provide network configurat
 + [React-DatePicker](https://hacker0x01.github.io/react-datepicker/)
 
 ## Login
-![](https://i.imgur.com/jWEgBLI.gif)
+![](https://i.imgur.com/xarWuBE.gif)
 + [Login Component](./src/components/login/Login.js)
-  + RegEx input validation
-  + Authentication token maintained in localStorage
-  + Authorization header applied through Apollo Client middleware
+  + Token persisted in localStorage
+  + Requests authorized through Apollo Client middleware
+  + RegEx validated input 
 
 ## New Order <a id="new-order"></a>
-![](https://i.imgur.com/3wHtU8H.gif)
-+ [New Order Components](./src/components/orders/) \([root -> NewOrder.js](./src/components/orders/Orders.js)\)
-  + Nested, controlled-components with shared state
+![](https://i.imgur.com/BifvAKW.gif)
++ [New Order Components](./src/components/orders/) \( [root](./src/components/orders/) -> [NewOrder.js](./src/components/orders/NewOrder.js)\)
+  + Shared state through nested, controlled components
   + Date and time managed with [Moment.js](https://momentjs.com/) and [React-DatePicker](https://hacker0x01.github.io/react-datepicker/)
   + Shopping Cart modeled with [Immutable.js List](https://facebook.github.io/immutable-js/docs/#/List)
 
 ## Recent Orders <a id="recent-orders"></a>
-![](https://i.imgur.com/TTMnarP.gif)
-+ [Order History Components](./src/components/orders/) \([root -> DesktopOrderHistory.js || MobileOrderHistory.js](./src/components/orders/Orders.js)\)
+![](https://i.imgur.com/GHsH8eu.gif)
++ [Order History Components](./src/components/orders/) \( [Orders.js](./src/components/orders/Orders.js) -> [DesktopOrderHistory.js](./src/components/orders/DesktopOrderHistory.js) || [MobileOrderHistory.js](./src/components/orders/MobileOrderHistory.js)\)
