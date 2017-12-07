@@ -33,10 +33,10 @@ class Login extends React.Component {
         this.state = {
             email: '',
             password: '',
-            validEmail: true,
-            validPassword: true,
+            validEmailInput: true,
+            validPasswordInput: true,
             loginError: false,
-            loginErrorMessage: false,
+            loginErrorMessageDisplay: false,
         }
     }
 
@@ -44,7 +44,7 @@ class Login extends React.Component {
         e.preventDefault()
         this.setState({ 
             [e.target.name] :  e.target.value,
-            validEmail: (/^$|(@gmail.com)$/g).test(e.target.value)
+            validEmailInput: (/^$|(@gmail.com)$/g).test(e.target.value)
         })
     }
 
@@ -52,7 +52,7 @@ class Login extends React.Component {
         e.preventDefault()
         this.setState({ 
             [e.target.name] :  e.target.value,
-            validPassword : (/^$|(\w)(\d)+/g).test(e.target.value)
+            validPasswordInput : (/^$|(\w)(\d)+/g).test(e.target.value)
         })
     }
 
@@ -65,14 +65,14 @@ class Login extends React.Component {
           } catch (e) {
               this.setState({ 
                   loginError: true,
-                  loginErrorMessage: true,
+                  loginErrorMessageDisplay: true,
                 })
               console.error(e)
         }
     }
 
-    _handleLoginErrorMessageDismiss = (e) => {
-        this.setState({ loginErrorMessage: false })
+    _handleloginErrorMessageDisplayDismiss = (e) => {
+        this.setState({ loginErrorMessageDisplay: false })
     }
 
     render() {
@@ -85,7 +85,7 @@ class Login extends React.Component {
         }
 
         return (
-        <Container textAlign='center'>
+        <Container textAlign='center' style={{ overflow: 'hidden' }}>
             { sessionStorage.getItem('graphcoolToken') !== undefined && <Redirect to='/orders'/> }
             <Divider hidden section />
             <Segment.Group raised size='small'>
@@ -98,16 +98,16 @@ class Login extends React.Component {
                     </Header>
                     <Divider/>
                     <Header.Subheader as='h4' style={{color: colors.accountLogin}}>
-                        LOGIN  –  SIGN UP
+                        USER LOGIN 
                     </Header.Subheader>
                     <Input fluid label='Username' placeholder='Email' name='email' onChange={this._handleEmailInput}/>
-                        { this.state.validEmail === false && 
-                            <Header.Subheader style={{color: 'red'}}>
+                        { this.state.validEmailInput === false && 
+                            <Header.Subheader style={{color: 'red' , display: 'inline'}}>
                                 Invalid Email
                             </Header.Subheader> }
                     <br />
                     <Input fluid label='Password' placeholder='Password' name='password' type='password' onChange={this._handlePasswordInput}/>
-                        { this.state.validPassword === false && 
+                        { this.state.validPasswordInput === false && 
                             <Header.Subheader style={{color: 'red', display: 'inline'}}>
                                 Invalid Password
                             </Header.Subheader> }
@@ -116,15 +116,14 @@ class Login extends React.Component {
                 <Button basic attached='bottom'>
                     <Header as='h3' onClick={() => this._signInUser()} style={{color: colors.submit}}>SUBMIT</Header>
                 </Button>
-                { this.state.loginError === true && this.state.loginErrorMessage === true &&
+                { this.state.loginError === true && this.state.loginErrorMessageDisplay === true &&
                     <Message
                         error
                         content='Login Failed, please try again.'
                         attached
-                        onDismiss={this._handleLoginErrorMessageDismiss}
+                        onDismiss={this._handleloginErrorMessageDisplayDismiss}
                     />}
             </Segment.Group>
-            Forgot <a style={{color: 'slateblue'}}>Email</a> or <a style={{color: 'slateblue'}}>Password</a> ?
         </Container>
         )
         
