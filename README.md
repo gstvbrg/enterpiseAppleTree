@@ -50,5 +50,5 @@ In conjunction with "GraphQL client" libraries, which provide network configurat
   + Shopping Cart modeled with [Immutable.js List](https://facebook.github.io/immutable-js/docs/#/List)
 
 ## Recent Orders <a id="recent-orders"></a>
-![](https://i.imgur.com/TTMnarP.gif)
+![](https://i.imgur.com/GHsH8eu.gif)
 + [Order History Components](./src/components/orders/) \( [Orders.js](./src/components/orders/Orders.js) -> [DesktopOrderHistory.js](./src/components/orders/DesktopOrderHistory.js) || [MobileOrderHistory.js](./src/components/orders/MobileOrderHistory.js)\)
