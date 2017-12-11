@@ -53,11 +53,11 @@ export default class DateGraph extends React.Component {
         return d3.extent(dateArr)
     }
 
-    // getDateRangeExtent = (dateTotalObj) => {
-    //     var totalArr = []
-    //     Object.entries(dateTotalObj).forEach(([key, obj]) => totalArr.push(dateTotalObj[key].total))
-    //     return d3.extent(totalArr)
-    // }
+    getDateRangeExtent = (dateTotalObj) => {
+        var totalArr = []
+        Object.entries(dateTotalObj).forEach(([key, obj]) => totalArr.push(dateTotalObj[key].total))
+        return d3.extent(totalArr)
+    }
 
     createDateScale = (dateTotalObj) => {
         return d3.scaleTime()
