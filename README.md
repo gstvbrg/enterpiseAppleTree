@@ -12,7 +12,7 @@
 ## Overview
 This app implements basic requirements for a web-based, inventory management tool. Allowing end users to track fundamental metrics and information related to products, customers, and transactions.
 
-These objects and actors are encapsulated in a custom GraphQL service; which helps define a strict type system for these abstractions, around which custom interfaces for querying and mutating associated data can be easily created using plain javascript. 
+These objects and actors are encapsulated in a custom GraphQL service; which helps define a strict type system for these abstractions, around which custom interfaces for querying and mutating related data can be created using plain javascript. 
 
 These CRUD-like operations can be auto-generated from the [schema](./src/AppleTrees.schema) and linked to a hosted SQL database with "Backend-as-a-service" tools like [Graphcool](https://www.graph.cool/) or [AWS App Sync](https://aws.amazon.com/appsync/). The resulting "GraphQL server" becomes an API which can be consumed by web clients, and is optimized for lightweight networking and relationship-rich data. 
 
