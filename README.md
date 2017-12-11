@@ -12,11 +12,11 @@
 ## Overview
 This app implements basic requirements for a web-based, inventory management tool. Allowing end users to track fundamental metrics and information related to products, customers, and transactions.
 
-These objects and actors are encapsulated in a custom GraphQL service; which helps define a strict type system for these abstractions, around which custom interfaces for querying and mututating the data can be easily created using plain javascript. 
+These objects and actors are encapsulated in a custom GraphQL service; which helps define a strict type system for these abstractions, around which custom interfaces for querying and mutating associated data can be easily created using plain javascript. 
 
-These CRUD-like operations can be auto-generated from the [schema](./src/AppleTrees.schema) and linked to a hosted SQL database with  "Backend-as-a-service" tools like [Graphcool](https://www.graph.cool/) or [AWS App Sync](https://aws.amazon.com/appsync/). The resulting "GraphQL server" becomes an API which can be consumed by web clients, and is opitmized for light-weight networking and relationship rich data. 
+These CRUD-like operations can be auto-generated from the [schema](./src/AppleTrees.schema) and linked to a hosted SQL database with "Backend-as-a-service" tools like [Graphcool](https://www.graph.cool/) or [AWS App Sync](https://aws.amazon.com/appsync/). The resulting "GraphQL server" becomes an API which can be consumed by web clients, and is optimized for lightweight networking and relationship-rich data. 
 
-This method of API generation is ideal for rapid prototyping, as the API can be quickly iterated on through changes to the underlying schema. Fuerthermore the interface abstracts away the database access layer, allowing for future infrustruture changes and integreations that will not easily break exsisting code.   
+This method of API generation is ideal for rapid prototyping, as the API can be quickly iterated on through changes to the underlying schema. Furthermore the interface abstracts away the database access layer, allowing for future infrastructure changes and integrations that will not easily break existing code.
 
 In conjunction with "GraphQL client" libraries, which provide networking configuration, data caching, and frontend framework bindings; this development strategy provides a robust set of tools that enable "full-stack" development unified through GraphQL and unimpeded by laborious devOps requirements. 
 
