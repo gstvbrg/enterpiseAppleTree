@@ -35,6 +35,9 @@ In concert with "GraphQL client" libraries, which provide networking configurati
 + [Moment.js](https://momentjs.com/)
 + [React-DatePicker](https://hacker0x01.github.io/react-datepicker/)
 
+# Features
+>*Disclaimer: The contents of these application screenshots, represents a demo implementation used in product discovery for a licensed cannabis delivery service. Generic data is used and does not represent any real entities.*
+
 ## Login
 ![](https://i.imgur.com/xarWuBE.gif)
 + [Login Component](./src/components/login/Login.js)
