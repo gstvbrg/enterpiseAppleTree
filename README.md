@@ -18,7 +18,7 @@ These CRUD-like operations can be auto-generated from the [schema](./src/AppleTr
 
 This method of API generation is ideal for rapid prototyping, as the API can be quickly iterated on through changes to the underlying schema. Furthermore the interface abstracts away the database access layer, allowing for future infrastructure changes and integrations that will not easily break existing code.
 
-In conjunction with "GraphQL client" libraries, which provide networking configuration, data caching, and frontend framework bindings; this development strategy provides a robust set of tools that enable "full-stack" development unified through GraphQL and unimpeded by laborious devOps requirements. 
+In concert with "GraphQL client" libraries, which provide networking configuration, data caching, and frontend framework bindings; this development strategy provides a robust set of tools that enable "full-stack" development unified through GraphQL and unimpeded by laborious devOps requirements. 
 
 ## Tools
 
