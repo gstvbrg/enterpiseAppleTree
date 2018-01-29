@@ -1,12 +1,12 @@
 # Apple Trees
-> Web-based Inventory and Transaction Managment Software
+> Web-based Inventory and Transaction Management Software
 
 #### Table of Contents
 + [Overview](#overview)
 + [Tools](#tools)
-+ Features
-  + [Login](#login)
++ Feature Highlights
   + [New Order](#new-order)
+  + [Login](#login)
   + [Recent Orders](#recent-orders)
 
 ## Overview
@@ -36,14 +36,7 @@ In concert with "GraphQL client" libraries, which provide networking configurati
 + [React-DatePicker](https://hacker0x01.github.io/react-datepicker/)
 
 # Features
->*Disclaimer: The contents of these application screenshots, represents a demo implementation used in product discovery for a licensed cannabis delivery service. Generic data is used and does not represent any real entities.*
-
-## Login
-![](https://i.imgur.com/xarWuBE.gif)
-+ [Login Component](./src/components/login/Login.js)
-  + Token persisted in localStorage
-  + Requests authorized through Apollo Client middleware
-  + RegEx validated input 
+>**_Disclaimer :_** *The contents of these application screenshots represents a demo implementation used in product discovery for a licensed cannabis delivery service. Generic data is used and does not represent any real entities or transactions.*
 
 ## New Order <a id="new-order"></a>
 ![](https://i.imgur.com/BifvAKW.gif)
@@ -51,6 +44,13 @@ In concert with "GraphQL client" libraries, which provide networking configurati
   + Shared state through nested, controlled components
   + Date and time managed with [Moment.js](https://momentjs.com/) and [React-DatePicker](https://hacker0x01.github.io/react-datepicker/)
   + Shopping Cart modeled with [Immutable.js List](https://facebook.github.io/immutable-js/docs/#/List)
+  
+## Login
+![](https://i.imgur.com/xarWuBE.gif)
++ [Login Component](./src/components/login/Login.js)
+  + Token persisted in localStorage
+  + Requests authorized through Apollo Client middleware
+  + RegEx validated input 
 
 ## Recent Orders <a id="recent-orders"></a>
 ![](https://i.imgur.com/GHsH8eu.gif)
